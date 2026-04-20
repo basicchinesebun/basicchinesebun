@@ -275,10 +275,12 @@ input[type=file]{display:none;}
   <div class="hdr">
     <div class="hdr-title">Basic Chinese Bun</div>
     <div class="hdr-btns">
+      <button class="hbtn" id="shopStatusBtn" onclick="toggleShop()" style="border-color:#86efac;color:#86efac;">🟢 ເປີດຮ້ານ</button>
       <button class="hbtn blue" id="printerBtn" onclick="connectPrinter()">🖨 ເຊື່ອມ</button>
       <div class="notif-wrap">
         <button class="hbtn" onclick="clearNotif()">🔔<span class="notif-dot" id="notifDot"></span></button>
       </div>
+      <button class="hbtn" onclick="showHistorySearch()">📋 ປະຫວັດ</button>
       <button class="hbtn red" onclick="showModal('resetModal')">↺</button>
     </div>
   </div>
@@ -291,6 +293,25 @@ input[type=file]{display:none;}
         <div class="stat"><div class="stat-num" id="sWaiting">0</div><div class="stat-lbl">ລໍຖ້າ</div></div>
         <div class="stat"><div class="stat-num" id="sDone">0</div><div class="stat-lbl">ສຳເລັດ</div></div>
         <div class="stat"><div class="stat-num" id="sAll">0</div><div class="stat-lbl">ທັງໝົດ</div></div>
+      </div>
+
+      <!-- ปุ่มเปิด/ปิดร้าน -->
+      <div id="shopStatusCard" style="border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(61,31,10,0.1);">
+        <button id="shopToggleBtn" onclick="toggleShop()" style="width:100%;padding:16px;font-size:18px;font-weight:900;border:none;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;border-radius:14px;">
+          🔴 ຮ້ານປິດ — ກົດເພື່ອເປີດ
+        </button>
+      </div>
+
+      <!-- ค้นหาประวัติด้วยเบอร์โทร -->
+      <div class="card card-collapsible collapsed" id="historyCard">
+        <div class="card-title" onclick="toggleCard('historyCard')">🔍 ຄົ້ນຫາປະຫວັດ</div>
+        <div class="card-body">
+          <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <input id="histSearchPhone" type="tel" placeholder="ເບີໂທ..." style="flex:1;border:2px solid var(--cream3);border-radius:10px;padding:10px;font-size:15px;font-family:'Noto Sans Lao',sans-serif;color:var(--brown);background:var(--cream);">
+            <button onclick="searchStaffHistory()" style="padding:10px 14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:14px;font-weight:900;font-family:'Noto Sans Lao',sans-serif;">ຄົ້ນ</button>
+          </div>
+          <div id="staffHistoryList"></div>
+        </div>
       </div>
 
       <div class="pstatus" id="pStatus"></div>
@@ -316,7 +337,7 @@ input[type=file]{display:none;}
         <div class="card-title" onclick="toggleCard('menuCard')">🍱 ເມນູ & ລາຄາ</div>
         <div class="card-body">
           <div id="menuSettingsList"></div>
-          <button onclick="saveMenuSettings()" style="width:100%;margin-top:10px;padding:12px;background:#000;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">💾 ບັນທຶກ</button>
+          <button onclick="saveMenuSettings()" style="width:100%;margin-top:10px;padding:14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">💾 ບັນທຶກເມນູ & ລາຄາ</button>
         </div>
       </div>
 
@@ -335,10 +356,7 @@ input[type=file]{display:none;}
             <button onclick="showDistribute()" style="width:100%;padding:10px;background:var(--brown2);color:var(--cream);border:none;border-radius:10px;font-size:14px;font-weight:900;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">⚖️ ແຈກຈ່າຍໃຫ້ໜ້າຮ້ານ + ອອນໄລນ໌</button>
           </div>
           <div id="stockList"></div>
-        </div>
-      </div>
-
-      <!-- Distribute Modal -->
+          <button onclick="saveStockManual()" style="width:100%;margin-top:10px;padding:14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">💾 ບັນທຶກສຕ໋ອກ</button>
       <div class="modal-bg" id="distributeModal">
         <div class="modal" style="max-width:400px;">
           <div class="modal-title">⚖️ ແຈກຈ່າຍສຕ໋ອກ</div>
@@ -527,6 +545,64 @@ function toast(msg, type='', duration=2500) {
   setTimeout(() => el.remove(), duration);
 }
 
+// ── Shop Open/Close ──
+function getShopStatus() { return JSON.parse(localStorage.getItem('bcb_shop')||'{"open":false,"dates":[]}'); }
+function saveShopStatus(s) {
+  localStorage.setItem('bcb_shop', JSON.stringify(s));
+  if(fbDb){
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      set(ref(fbDb,'shop'),s).catch(()=>{});
+    });
+  }
+}
+function toggleShop() {
+  const s = getShopStatus();
+  s.open = !s.open;
+  if(s.open) {
+    const today = new Date().toISOString().split('T')[0];
+    if(!s.dates.includes(today)) s.dates.push(today);
+  }
+  saveShopStatus(s);
+  renderShopStatus();
+  toast(s.open ? '🟢 ເປີດຮ້ານແລ້ວ' : '🔴 ປິດຮ້ານແລ້ວ', s.open?'green':'orange');
+}
+function renderShopStatus() {
+  const s = getShopStatus();
+  const btn = document.getElementById('shopToggleBtn');
+  if(!btn) return;
+  if(s.open) {
+    btn.textContent = '🟢 ຮ້ານເປີດຢູ່ — ກົດເພື່ອປິດ';
+    btn.style.background = 'var(--green-bg)';
+    btn.style.color = 'var(--green)';
+    btn.style.border = '2px solid var(--green)';
+  } else {
+    btn.textContent = '🔴 ຮ້ານປິດ — ກົດເພື່ອເປີດ';
+    btn.style.background = 'var(--red-bg)';
+    btn.style.color = 'var(--red)';
+    btn.style.border = '2px solid var(--red)';
+  }
+}
+
+// ── Staff History Search ──
+function searchStaffHistory() {
+  const phone = document.getElementById('histSearchPhone').value.trim();
+  const list = document.getElementById('staffHistoryList');
+  if(!phone) { list.innerHTML='<div style="color:var(--gray3);font-size:13px;text-align:center;padding:10px;">ກະລຸນາໃສ່ເບີໂທ</div>'; return; }
+  const orders = getOrders().filter(o => o.custPhone === phone || o.phone === phone);
+  if(!orders.length) { list.innerHTML='<div style="color:var(--gray3);font-size:13px;text-align:center;padding:10px;">ບໍ່ພົບປະຫວັດ</div>'; return; }
+  const colorMap = {pending:'var(--orange)',confirmed:'var(--green)',rejected:'var(--red)'};
+  list.innerHTML = orders.map(o=>`
+    <div style="border:1.5px solid var(--cream3);border-radius:10px;padding:10px;margin-bottom:8px;background:var(--warm-white);">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <div style="font-size:15px;font-weight:900;color:var(--brown);">ຄິວ ${String(o.num).padStart(3,'0')}</div>
+        <div style="font-size:12px;color:var(--gray3);">${o.time||''} ${o.pickupDate||''}</div>
+      </div>
+      <div style="font-size:13px;color:var(--brown2);margin-bottom:4px;">${o.items||''}</div>
+      <div style="font-size:13px;font-weight:900;color:var(--brown);">${o.total?o.total.toLocaleString()+' ກີບ':'—'}</div>
+      ${o.cancelled?'<span style="font-size:11px;background:var(--red-bg);color:var(--red);border-radius:5px;padding:2px 8px;">✕ ຍົກເລີກ</span>':o.done?'<span style="font-size:11px;background:var(--green-bg);color:var(--green);border-radius:5px;padding:2px 8px;">✓ ສຳເລັດ</span>':'<span style="font-size:11px;background:var(--orange-bg);color:var(--orange);border-radius:5px;padding:2px 8px;">⏳ ລໍຖ້າ</span>'}
+    </div>`).join('');
+}
+
 // ── Settings ──
 function loadSettings() {
   autoPrint = localStorage.getItem('bcb_autoprint') === '1';
@@ -684,6 +760,20 @@ function showDistribute() {
     </div>`).join('');
   showModal('distributeModal');
 }
+function saveStockManual() {
+  const st = getStock(currentStockTab);
+  saveStock(st, currentStockTab);
+  // sync ขึ้น Firebase
+  if(fbDb) {
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      const key = currentStockTab==='online'?'stock/online':currentStockTab==='walkin'?'stock/walkin':'stock/total';
+      set(ref(fbDb, key), st).then(()=>toast('💾 ບັນທຶກສຕ໋ອກ ✅ — sync ແລ້ວ','green')).catch(()=>toast('💾 ບັນທຶກສຕ໋ອກ ✅','green'));
+    });
+  } else {
+    toast('💾 ບັນທຶກສຕ໋ອກ ✅','green');
+  }
+}
+
 function applyDistribute() {
   const mn = getMenuNames();
   const stTotal = getStock('total');
@@ -1227,6 +1317,7 @@ renderStock();
 renderQRAdmin();
 buildMenuSettings();
 render();
+renderShopStatus();
 window.addEventListener('storage',()=>{render();checkNotif();renderStock();});
 setInterval(()=>{render();checkNotif();},2000);
 

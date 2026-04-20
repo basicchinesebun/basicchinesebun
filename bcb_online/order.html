@@ -719,10 +719,51 @@ function newOrder() {
   showStep(1);
 }
 
+// ── Check shop open status from Firebase ──
+async function checkShopOpen() {
+  try {
+    const snap = await get(ref(db, 'shop'));
+    if(snap.exists()) {
+      const s = snap.val();
+      if(!s.open) {
+        // ร้านปิด — แสดง overlay
+        document.body.innerHTML = `
+          <div style="min-height:100vh;background:#fdf6ee;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;font-family:'Noto Sans Lao',sans-serif;">
+            <div style="background:#fffbf6;border:3px solid #3d1f0a;border-radius:24px;padding:40px 28px;text-align:center;max-width:320px;width:100%;">
+              <div style="font-size:52px;margin-bottom:16px;">🔴</div>
+              <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#3d1f0a;margin-bottom:8px;">Basic Chinese Bun</div>
+              <div style="font-size:16px;font-weight:700;color:#8a6a55;margin-bottom:16px;">ຮ້ານປິດຢູ່ໃນຂະນະນີ້</div>
+              <div style="font-size:14px;color:#a0522d;">ກະລຸນາກັບມາໃໝ່ເມື່ອຮ້ານເປີດຄ່ະ 🙏</div>
+            </div>
+          </div>`;
+        return false;
+      }
+      // ตั้งค่าวันที่ที่เปิดได้
+      if(s.dates && s.dates.length > 0) {
+        const dateInput = document.getElementById('pickupDate');
+        if(dateInput) {
+          // เปิดใช้เฉพาะวันที่ร้านเคยเปิด
+          dateInput.min = s.dates[0];
+          // กรองวันที่ไม่เปิด (ยังไม่ implement ขั้นสูง)
+        }
+      }
+      return true;
+    }
+  } catch(e) {}
+  return true; // ถ้าเช็คไม่ได้ให้ผ่านไปก่อน
+}
+
 // Set min date to today
 const today=new Date().toISOString().split('T')[0];
-document.getElementById('pickupDate').min=today;
-document.getElementById('pickupDate').value=today;
+const pickupDateEl = document.getElementById('pickupDate');
+if(pickupDateEl) { pickupDateEl.min=today; pickupDateEl.value=today; }
+
+// Fix time picker — make entire field clickable
+const pickupTimeEl = document.getElementById('pickupTime');
+if(pickupTimeEl) {
+  pickupTimeEl.style.cursor='pointer';
+  pickupTimeEl.addEventListener('click', function(){ this.showPicker && this.showPicker(); });
+}
 
 // expose functions globally
 window.toggleMenu=toggleMenu; window.chgQ=chgQ; window.setQ=setQ;
@@ -734,6 +775,7 @@ window.showStep=showStep; window.showHistory=showHistory;
 window.searchHistory=searchHistory;
 
 loadData();
+checkShopOpen();
 </script>
 </body>
 </html>
