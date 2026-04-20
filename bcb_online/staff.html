@@ -320,10 +320,33 @@ input[type=file]{display:none;}
         </div>
       </div>
 
-      <!-- Stock (collapsible) -->
+      <!-- Stock 3 ชั้น (collapsible) -->
       <div class="card card-collapsible collapsed" id="stockCard">
         <div class="card-title" onclick="toggleCard('stockCard')">📦 ສຕ໋ອກ / Stock</div>
-        <div class="card-body"><div id="stockList"></div></div>
+        <div class="card-body">
+          <!-- Tab selector -->
+          <div style="display:flex;gap:6px;margin-bottom:12px;">
+            <button onclick="switchStockTab('total')" id="stab-total" style="flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:900;border:2px solid var(--brown);background:var(--brown);color:var(--cream);font-family:'Noto Sans Lao',sans-serif;">📦 ລວມ</button>
+            <button onclick="switchStockTab('walkin')" id="stab-walkin" style="flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:900;border:2px solid var(--cream3);background:var(--warm-white);color:var(--brown);font-family:'Noto Sans Lao',sans-serif;">🏪 ໜ້າຮ້ານ</button>
+            <button onclick="switchStockTab('online')" id="stab-online" style="flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:900;border:2px solid var(--cream3);background:var(--warm-white);color:var(--brown);font-family:'Noto Sans Lao',sans-serif;">🌐 ອອນໄລນ໌</button>
+          </div>
+          <!-- ปุ่มแจกจ่าย -->
+          <div id="distributeBtn" style="display:none;margin-bottom:10px;">
+            <button onclick="showDistribute()" style="width:100%;padding:10px;background:var(--brown2);color:var(--cream);border:none;border-radius:10px;font-size:14px;font-weight:900;font-family:'Noto Sans Lao',sans-serif;">⚖️ ແຈກຈ່າຍໃຫ້ໜ້າຮ້ານ + ອອນໄລນ໌</button>
+          </div>
+          <div id="stockList"></div>
+        </div>
+      </div>
+
+      <!-- Distribute Modal -->
+      <div class="modal-bg" id="distributeModal">
+        <div class="modal" style="max-width:400px;">
+          <div class="modal-title">⚖️ ແຈກຈ່າຍສຕ໋ອກ</div>
+          <div class="modal-sub">ກຳນົດຈຳນວນໃຫ້ແຕ່ລະຊ່ອງທາງ</div>
+          <div id="distributeList" style="max-height:50vh;overflow-y:auto;margin-bottom:14px;"></div>
+          <button class="mbtn black" onclick="applyDistribute()">✅ ຢືນຢັນ</button>
+          <button class="mbtn outline" onclick="hideModal('distributeModal')">ຍົກເລີກ</button>
+        </div>
       </div>
 
       <!-- QR (collapsible) -->
@@ -560,19 +583,117 @@ function getMenuNames() {
   const s=localStorage.getItem('bcb_menus');
   return s?JSON.parse(s):[{lo:'ຊາລາເປົາໝູສັບ'},{lo:'ໝັນໂຖ Dark Chocolate'},{lo:'ໝັນໂຖ Matcha'},{lo:'ເມນູ 4'},{lo:'ເມນູ 5'},{lo:'ເມນູ 6'},{lo:'ເມນູ 7'}];
 }
-function getStock() { const s=localStorage.getItem('bcb_stock'); return s?JSON.parse(s):new Array(7).fill(0); }
-function saveStock(s) { localStorage.setItem('bcb_stock',JSON.stringify(s)); }
-function changeStock(i,d) {
-  const st=getStock(); st[i]=Math.max(0,(st[i]||0)+d); saveStock(st);
-  _updateStockRow(i,st[i]);
-  if (st[i]===0) _alertLowStock(getMenuNames()[i]?.lo||'ເມນູ',true);
-  else if (st[i]<=5) _alertLowStock(getMenuNames()[i]?.lo||'ເມນູ',false);
-  // blur any focused input to prevent keyboard popup
+// ── Stock 3 ชั้น ──
+let currentStockTab = 'total';
+function getStock(type='total') {
+  const key = type==='total'?'bcb_stock':type==='walkin'?'bcb_stock_walkin':'bcb_stock_online';
+  const s = localStorage.getItem(key);
+  return s ? JSON.parse(s) : new Array(getMenuNames().length).fill(0);
+}
+function saveStock(s, type='total') {
+  const key = type==='total'?'bcb_stock':type==='walkin'?'bcb_stock_walkin':'bcb_stock_online';
+  localStorage.setItem(key, JSON.stringify(s));
+}
+function switchStockTab(tab) {
+  currentStockTab = tab;
+  ['total','walkin','online'].forEach(t => {
+    const btn = document.getElementById('stab-'+t);
+    if (!btn) return;
+    if (t === tab) {
+      btn.style.background = 'var(--brown)';
+      btn.style.color = 'var(--cream)';
+      btn.style.borderColor = 'var(--brown)';
+    } else {
+      btn.style.background = 'var(--warm-white)';
+      btn.style.color = 'var(--brown)';
+      btn.style.borderColor = 'var(--cream3)';
+    }
+  });
+  const distBtn = document.getElementById('distributeBtn');
+  if (distBtn) distBtn.style.display = tab==='total' ? 'block' : 'none';
+  renderStock();
+}
+function changeStock(i, d) {
+  const st = getStock(currentStockTab);
+  st[i] = Math.max(0, (st[i]||0)+d);
+  saveStock(st, currentStockTab);
+  _updateStockRow(i, st[i]);
   if (document.activeElement) document.activeElement.blur();
 }
-function commitStock(i,val) {
-  const st=getStock(); st[i]=Math.max(0,parseInt(val)||0); saveStock(st);
-  _updateStockRow(i,st[i]);
+function commitStock(i, val) {
+  const st = getStock(currentStockTab);
+  st[i] = Math.max(0, parseInt(val)||0);
+  saveStock(st, currentStockTab);
+  _updateStockRow(i, st[i]);
+}
+function _updateStockRow(i, qty) {
+  const inp = document.getElementById('si-'+i);
+  if (inp) { inp.value=qty; inp.className='sinput'+(qty===0?' out':qty<=5?' low':''); }
+}
+function renderStock() {
+  const mn = getMenuNames();
+  const st = getStock(currentStockTab);
+  const stTotal = getStock('total');
+  const tabLabel = currentStockTab==='total'?'ສຕ໋ອກລວມ':currentStockTab==='walkin'?'ສຕ໋ອກໜ້າຮ້ານ':'ສຕ໋ອກອອນໄລນ໌';
+  document.getElementById('stockList').innerHTML = `
+    <div style="font-size:11px;font-weight:900;color:var(--gray3);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">${tabLabel}</div>
+  ` + mn.map((m, i) => {
+    const q = st[i]||0;
+    const cls = q===0?' out':q<=5?' low':'';
+    return `<div class="stock-row">
+      <div class="stock-name">${m.lo}</div>
+      <div class="sctrl">
+        <button class="sbtn" onclick="changeStock(${i},-1)">−</button>
+        <input class="sinput${cls}" type="text" inputmode="numeric" pattern="[0-9]*" id="si-${i}" value="${q}"
+          onclick="this.select();event.preventDefault();" onblur="commitStock(${i},this.value)"
+          onkeydown="if(event.key==='Enter'){commitStock(${i},this.value);this.blur();}">
+        <button class="sbtn" onclick="changeStock(${i},1)">+</button>
+      </div></div>`;
+  }).join('');
+}
+
+// ── Distribute stock ──
+function showDistribute() {
+  const mn = getMenuNames();
+  const stTotal = getStock('total');
+  const stWalkin = getStock('walkin');
+  const stOnline = getStock('online');
+  document.getElementById('distributeList').innerHTML = mn.map((m, i) => `
+    <div style="padding:10px 0;border-bottom:1px solid var(--cream2);">
+      <div style="font-size:14px;font-weight:900;color:var(--brown);margin-bottom:6px;">${m.lo} <span style="font-size:12px;color:var(--gray3);font-weight:700;">(ລວມ: ${stTotal[i]||0})</span></div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="flex:1;">
+          <div style="font-size:11px;font-weight:700;color:var(--gray3);margin-bottom:3px;">🏪 ໜ້າຮ້ານ</div>
+          <input type="text" inputmode="numeric" id="dist-walkin-${i}" value="${stWalkin[i]||0}" style="width:100%;border:1.5px solid var(--cream3);border-radius:8px;padding:6px;text-align:center;font-size:15px;font-weight:900;color:var(--brown);background:var(--cream);">
+        </div>
+        <div style="font-size:18px;color:var(--cream3);padding-top:16px;">+</div>
+        <div style="flex:1;">
+          <div style="font-size:11px;font-weight:700;color:var(--gray3);margin-bottom:3px;">🌐 ອອນໄລນ໌</div>
+          <input type="text" inputmode="numeric" id="dist-online-${i}" value="${stOnline[i]||0}" style="width:100%;border:1.5px solid var(--cream3);border-radius:8px;padding:6px;text-align:center;font-size:15px;font-weight:900;color:var(--brown);background:var(--cream);">
+        </div>
+      </div>
+    </div>`).join('');
+  showModal('distributeModal');
+}
+function applyDistribute() {
+  const mn = getMenuNames();
+  const stTotal = getStock('total');
+  const newWalkin = new Array(mn.length).fill(0);
+  const newOnline = new Array(mn.length).fill(0);
+  let valid = true;
+  mn.forEach((m, i) => {
+    const w = parseInt(document.getElementById('dist-walkin-'+i)?.value)||0;
+    const o = parseInt(document.getElementById('dist-online-'+i)?.value)||0;
+    if (w+o > (stTotal[i]||0)) { toast(`⚠️ ${m.lo}: ເກີນສຕ໋ອກລວມ (${stTotal[i]||0})`, 'orange'); valid=false; return; }
+    newWalkin[i] = w;
+    newOnline[i] = o;
+  });
+  if (!valid) return;
+  saveStock(newWalkin, 'walkin');
+  saveStock(newOnline, 'online');
+  hideModal('distributeModal');
+  toast('ແຈກຈ່າຍສຕ໋ອກ ✅', 'green');
+  renderStock();
 }
 function _updateStockRow(i,qty) {
   const inp=document.getElementById('si-'+i),badge=document.getElementById('sb-'+i);
@@ -592,33 +713,21 @@ function _alertLowStock(name,isOut) {
     const o=ctx.createOscillator();o.connect(g);o.frequency.value=isOut?440:660;o.start();o.stop(ctx.currentTime+0.3);
   } catch(e){}
 }
-function deductStock(itemsText) {
-  const mn=getMenuNames(),st=getStock();
+function deductStock(itemsText, type='walkin') {
+  const mn=getMenuNames(), st=getStock(type), stTotal=getStock('total');
   itemsText.split('\n').forEach(line=>{
     if (!line.trim()) return;
     const qtyMatch=line.match(/x(\d+)/);
     const qty=qtyMatch?parseInt(qtyMatch[1]):1;
     const idx=mn.findIndex(m=>line.includes(m.lo));
-    if (idx>=0) { st[idx]=Math.max(0,(st[idx]||0)-qty); }
+    if (idx>=0) {
+      st[idx]=Math.max(0,(st[idx]||0)-qty);
+      stTotal[idx]=Math.max(0,(stTotal[idx]||0)-qty);
+    }
   });
-  saveStock(st); renderStock();
-}
-function renderStock() {
-  const mn=getMenuNames(),st=getStock();
-  document.getElementById('stockList').innerHTML=mn.map((m,i)=>{
-    const q=st[i]||0,cls=q===0?' out':q<=5?' low':'';
-    const bs=q===0||q<=5,bt=q===0?'ໝົດ':'ໃກ້ໝົດ',bc=q===0?'out':'low';
-    return `<div class="stock-row">
-      <div class="stock-name">${m.lo}</div>
-      <span class="sbadge ${bc}" id="sb-${i}" style="${bs?'':'display:none'}">${bt}</span>
-      <div class="sctrl">
-        <button class="sbtn" onclick="changeStock(${i},-1)">−</button>
-        <input class="sinput${cls}" type="text" inputmode="numeric" pattern="[0-9]*" id="si-${i}" value="${q}"
-          onclick="this.select();event.preventDefault();" onblur="commitStock(${i},this.value)"
-          onkeydown="if(event.key==='Enter'){commitStock(${i},this.value);this.blur();}">
-        <button class="sbtn" onclick="changeStock(${i},1)">+</button>
-      </div></div>`;
-  }).join('');
+  saveStock(st, type);
+  saveStock(stTotal, 'total');
+  renderStock();
 }
 
 // ── Notifications ──
@@ -717,7 +826,7 @@ function oneActionDone(i) {
   undoStack.push({index:i,snapshot:JSON.parse(JSON.stringify(o))});
   if (undoStack.length>20) undoStack.shift();
   o.called=true; o.done=true; saveOrders(orders);
-  announce(o.num); addSale(o); deductStock(o.items);
+  announce(o.num); addSale(o); deductStock(o.items, o.type==='online'?'online':'walkin');
   const qs=JSON.parse(localStorage.getItem('queue_state')||'{"next":1,"serving":0}');
   qs.serving=o.num; localStorage.setItem('queue_state',JSON.stringify(qs));
   if (autoPrint) printOrder(i);
