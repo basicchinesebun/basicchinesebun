@@ -179,17 +179,22 @@ input[type=file]{display:none;}
     <div class="bag-summary" id="bagSummary"></div>
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div class="bag-opt" id="bopt1" onclick="selectBagType(1)">
-        <div class="bag-opt-title">🛍 ຖົງດຽວລວມທັງໝົດ</div>
-        <div class="bag-opt-desc">ໃສ່ທຸກຢ່າງໃນຖົງດຽວກັນ · ງ່າຍ ໄວ</div>
+        <div class="bag-opt-title">🛍 ໃສ່ຖົງດຽວ</div>
+        <div class="bag-opt-desc">ລວມທຸກຢ່າງໃສ່ຖົງດຽວກັນ</div>
       </div>
       <div class="bag-opt" id="bopt2" onclick="selectBagType(2)">
-        <div class="bag-opt-title">📦 ແຍກຕາມປະເພດເມນູ</div>
-        <div class="bag-opt-desc">ເຊັ່ນ: ຊ໋ອກໂກແລດຖົງໜຶ່ງ · ມັດຊະຖົງໜຶ່ງ</div>
+        <div class="bag-opt-title">📦 ແຍກຕາມເມນູ</div>
+        <div class="bag-opt-desc">ແຕ່ລະປະເພດເມນູຢູ່ຄົນລະຖົງ</div>
       </div>
       <div class="bag-opt" id="bopt3" onclick="selectBagType(3)">
-        <div class="bag-opt-title">1️⃣ ແຍກທີລະກ້ອນ</div>
-        <div class="bag-opt-desc">ຂະໜົມ 1 ກ້ອນ = ຖົງກະດາດ 1 ໃບ</div>
+        <div class="bag-opt-title">1️⃣ ແຍກທຸກກ້ອນ</div>
+        <div class="bag-opt-desc">ຂະໜົມ 1 ກ້ອນ ຕໍ່ 1 ຖົງ</div>
       </div>
+    </div>
+    <!-- ย้ายหมายเหตุมาอยู่ที่นี่ -->
+    <div style="margin-top:8px;">
+      <div style="font-size:14px;font-weight:900;color:var(--brown);margin-bottom:6px;">📝 ໝາຍເຫດ (ຖ້າມີ)</div>
+      <textarea id="bagNote" style="width:100%;border:2px solid var(--cream3);border-radius:10px;padding:10px 12px;font-size:15px;font-family:'Noto Sans Lao',sans-serif;color:var(--brown);background:var(--cream);resize:none;height:70px;" placeholder="ເຊັ່ນ: ແຍກຊ໋ອກໂກແລດອອກ, ໃສ່ຖົງກ່ອງ..."></textarea>
     </div>
   </div>
   <div class="bbar">
@@ -228,12 +233,6 @@ input[type=file]{display:none;}
           <label>ເວລາ · Time *</label>
           <input id="pickupTime" type="time" oninput="validateInfo()">
         </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">📝 ໝາຍເຫດ (ຖ້າມີ)</div>
-      <div class="field">
-        <textarea id="custNote" placeholder="ເຊັ່ນ: ຕ້ອງການຫໍ່ຂອງຂວັນ, ອາໂລຈີ..."></textarea>
       </div>
     </div>
   </div>
@@ -572,65 +571,68 @@ async function submitOrder() {
   const btn=document.getElementById('submitBtn');
   btn.disabled=true; btn.textContent='⏳ ກຳລັງສົ່ງ...';
 
+  // timeout 15 วินาที ถ้า Firebase ไม่ตอบ
+  const timeout = new Promise((_,reject) => setTimeout(()=>reject(new Error('ໝົດເວລາ — ກວດສອບອິນເຕີເນັດ')), 15000));
+
   try {
-    // Get queue number
-    const qSnap=await get(ref(db,'queue_state'));
-    const qs=qSnap.exists()?qSnap.val():{next:1};
-    const myNum=qs.next||1;
-
-    // Build order items text
-    let lines=''; let total=0;
-    selected.forEach((s,i)=>{ if(!s) return; const qty=quantities[i]; const sub=prices[i]*qty; total+=sub; lines+=`${menus[i].lo} x${qty}${prices[i]?' = '+sub.toLocaleString()+' ກີບ':''}\n`; });
-
-    // Upload slip to Firebase Storage
-    let slipUrl='';
-    if(slipFile){
-      try{
-        const slipRef=sref(storage,`slips/${Date.now()}_${myNum}.jpg`);
-        await uploadBytes(slipRef,slipFile);
-        slipUrl=await getDownloadURL(slipRef);
-      }catch(e){ slipUrl=slipDataUrl||''; } // fallback to base64 if storage fails
-    }
-
-    const now=new Date().toLocaleTimeString('lo-LA',{hour:'2-digit',minute:'2-digit'});
-    const order={
-      num: myNum,
-      type: 'online',
-      items: lines.trim(),
-      total, time: now,
-      bag: BAG_LABELS[selectedBagType]||'',
-      custName: document.getElementById('custName').value.trim(),
-      custPhone: document.getElementById('custPhone').value.trim(),
-      pickupDate: document.getElementById('pickupDate').value,
-      pickupTime: document.getElementById('pickupTime').value,
-      note: document.getElementById('custNote').value.trim(),
-      slipUrl,
-      status: 'pending', // pending | confirmed | rejected
-      done: false, cancelled: false, called: false,
-      createdAt: Date.now()
-    };
-
-    // Save order to Firebase
-    await set(ref(db,`orders/${myNum}`), order);
-    // Update queue
-    await set(ref(db,'queue_state'), {next: myNum+1, serving: qs.serving||0});
-
-    // Show status
-    document.getElementById('statusQnum').textContent=String(myNum).padStart(3,'0');
-    document.getElementById('statusInfo').innerHTML=`
-      <div>👤 ${order.custName}</div>
-      <div>📅 ${order.pickupDate} · ${order.pickupTime}</div>
-      <div>💰 ${total?total.toLocaleString()+' ກີບ':'—'}</div>
-    `;
-    showStep(5);
-
-    // Listen for status updates
-    listenOrderStatus(myNum);
-    toast('ສ່ງຄຳສັ່ງ ✅','green');
+    await Promise.race([_doSubmit(), timeout]);
   } catch(err) {
     toast('ເກີດຂໍ້ຜິດພາດ: '+err.message,'red');
     btn.disabled=false; btn.textContent='✅ ສ່ງຄຳສັ່ງ · Submit Order';
   }
+}
+
+async function _doSubmit() {
+  const btn=document.getElementById('submitBtn');
+  // Get queue number
+  const qSnap=await get(ref(db,'queue_state'));
+  const qs=qSnap.exists()?qSnap.val():{next:1};
+  const myNum=qs.next||1;
+
+  // Build order items text
+  let lines=''; let total=0;
+  selected.forEach((s,i)=>{ if(!s) return; const qty=quantities[i]; const sub=prices[i]*qty; total+=sub; lines+=`${menus[i].lo} x${qty}${prices[i]?' = '+sub.toLocaleString()+' ກີບ':''}\n`; });
+
+  // Upload slip — ใช้ base64 ถ้า Storage ไม่พร้อม
+  let slipUrl = slipDataUrl || '';
+  if(slipFile){
+    try{
+      const slipRef=sref(storage,`slips/${Date.now()}_${myNum}.jpg`);
+      await uploadBytes(slipRef,slipFile);
+      slipUrl=await getDownloadURL(slipRef);
+    }catch(e){ slipUrl=slipDataUrl||''; }
+  }
+
+  const now=new Date().toLocaleTimeString('lo-LA',{hour:'2-digit',minute:'2-digit'});
+  const bagNote=document.getElementById('bagNote')?.value?.trim()||'';
+  const order={
+    num: myNum, type: 'online',
+    items: lines.trim(), total, time: now,
+    bag: BAG_LABELS[selectedBagType]||'',
+    bagNote,
+    custName: document.getElementById('custName').value.trim(),
+    custPhone: document.getElementById('custPhone').value.trim(),
+    pickupDate: document.getElementById('pickupDate').value,
+    pickupTime: document.getElementById('pickupTime').value,
+    note: document.getElementById('custNote').value.trim(),
+    slipUrl,
+    status: 'pending',
+    done: false, cancelled: false, called: false,
+    createdAt: Date.now()
+  };
+
+  await set(ref(db,`orders/${myNum}`), order);
+  await set(ref(db,'queue_state'), {next: myNum+1, serving: qs.serving||0});
+
+  document.getElementById('statusQnum').textContent=String(myNum).padStart(3,'0');
+  document.getElementById('statusInfo').innerHTML=`
+    <div>👤 ${order.custName}</div>
+    <div>📅 ${order.pickupDate} · ${order.pickupTime}</div>
+    <div>💰 ${total?total.toLocaleString()+' ກີບ':'—'}</div>
+  `;
+  showStep(5);
+  listenOrderStatus(myNum);
+  toast('ສ່ງຄຳສັ່ງ ✅','green');
 }
 
 // ══════════════════════════════════════
