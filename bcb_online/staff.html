@@ -74,7 +74,7 @@ button{font-family:'Noto Sans Lao',sans-serif;cursor:pointer;}
 ══════════════════════════════════ */
 .layout{display:grid;grid-template-columns:1fr;max-width:1200px;margin:0 auto;}
 @media(min-width:768px){
-  .layout{grid-template-columns:300px 1fr;align-items:start;}
+  .layout{display:grid!important;grid-template-columns:300px 1fr!important;align-items:start;}
   .sidebar{position:sticky;top:49px;max-height:calc(100vh - 49px);overflow-y:auto;}
 }
 .sidebar{padding:12px 12px 0;display:flex;flex-direction:column;gap:10px;}
@@ -898,13 +898,30 @@ function saveMenuSettings() {
 }
 function uploadMenuImg(e, i) {
   const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    localStorage.setItem('bcb_img_' + i, ev.target.result);
-    buildMenuSettings();
-    toast('ອັບໂຫລດຮູບ ✅', 'green');
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 400;
+      let w = img.width, h = img.height;
+      if(w > MAX){ h = Math.round(h*MAX/w); w = MAX; }
+      if(h > MAX){ w = Math.round(w*MAX/h); h = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const data = canvas.toDataURL('image/jpeg', 0.7);
+      localStorage.setItem('bcb_img_' + i, data);
+      buildMenuSettings();
+      // sync ขึ้น Firebase
+      if(window.fbDb) {
+        import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+          set(ref(window.fbDb, 'settings/img_' + i), data).then(()=>toast('ອັບໂຫລດຮູບ ✅ sync ແລ້ວ','green')).catch(()=>toast('ອັບໂຫລດຮູບ ✅','green'));
+        });
+      } else { toast('ອັບໂຫລດຮູບ ✅','green'); }
+    };
+    img.src = ev.target.result;
   };
-  r.readAsDataURL(f);
+  reader.readAsDataURL(f);
 }
 
 // ── QR Admin ──
@@ -1058,10 +1075,10 @@ function toggleShop() {
   localStorage.setItem('bcb_shop', newOpen ? 'open' : 'closed');
   updateShopBtn(newOpen);
   toast(newOpen ? '🟢 ເປີດຮ້ານແລ້ວ' : '🔴 ປິດຮ້ານແລ້ວ', newOpen ? 'green' : 'red');
-  // sync Firebase
+  // sync Firebase — ใช้ path เดียวกับที่ order.html อ่าน
   if(window.fbDb) {
     import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-      set(ref(window.fbDb,'settings/shopOpen'), newOpen).catch(()=>{});
+      set(ref(window.fbDb,'shop'), {open: newOpen}).catch(()=>{});
     });
   }
 }

@@ -485,7 +485,51 @@ function newOrder() {
 }
 
 loadData(); buildGrid(); loadQR();
-window.addEventListener('storage', e => { if (e.key === 'bcb_stock') buildGrid(); });
+window.addEventListener('storage', e => { if (e.key === 'bcb_stock' || e.key === 'bcb_menus' || e.key === 'bcb_prices') { loadData(); buildGrid(); } });
+
+// ── Load from Firebase ──
+(async () => {
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+    const { getDatabase, ref, get, onValue } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+    const app = initializeApp({
+      apiKey:"AIzaSyBttrWZXEeC-_zgiHftpHTspqlJL_CeSgQ",
+      authDomain:"basic-chinese-bun.firebaseapp.com",
+      databaseURL:"https://basic-chinese-bun-default-rtdb.firebaseio.com",
+      projectId:"basic-chinese-bun",
+      storageBucket:"basic-chinese-bun.firebasestorage.app",
+      messagingSenderId:"893711620048",
+      appId:"1:893711620048:web:3fcfa7aa5f808d25bd8bd5"
+    }, 'index-app');
+    const db = getDatabase(app);
+
+    // โหลดเมนู ราคา สต็อก QR รูปเมนู จาก Firebase
+    const [menuSnap, priceSnap, stockSnap, qrSnap] = await Promise.all([
+      get(ref(db,'settings/menus')),
+      get(ref(db,'settings/prices')),
+      get(ref(db,'stock/online')),
+      get(ref(db,'settings/qr')),
+    ]);
+    if(menuSnap.exists()) { menus = menuSnap.val(); localStorage.setItem('bcb_menus', JSON.stringify(menus)); }
+    if(priceSnap.exists()) { prices = priceSnap.val(); localStorage.setItem('bcb_prices', JSON.stringify(prices)); }
+    if(stockSnap.exists()) localStorage.setItem('bcb_stock', JSON.stringify(stockSnap.val()));
+    if(qrSnap.exists()) localStorage.setItem('bcb_qr', qrSnap.val());
+
+    // โหลดรูปเมนูจาก Firebase
+    for(let i=0; i<7; i++) {
+      const imgSnap = await get(ref(db,'settings/img_'+i));
+      if(imgSnap.exists()) localStorage.setItem('bcb_img_'+i, imgSnap.val());
+    }
+
+    loadData(); buildGrid(); loadQR();
+
+    // listen real-time
+    onValue(ref(db,'settings/menus'), s => { if(s.exists()){menus=s.val();loadData();buildGrid();} });
+    onValue(ref(db,'settings/prices'), s => { if(s.exists()){prices=s.val();loadData();buildGrid();} });
+    onValue(ref(db,'stock/online'), s => { if(s.exists())localStorage.setItem('bcb_stock',JSON.stringify(s.val())); buildGrid(); });
+    onValue(ref(db,'settings/qr'), s => { if(s.exists())localStorage.setItem('bcb_qr',s.val()); loadQR(); });
+  } catch(e) { console.log('Firebase index error:', e); }
+})();
 </script>
 </body>
 </html>
