@@ -617,7 +617,7 @@ async function _doSubmit() {
     custPhone: document.getElementById('custPhone').value.trim(),
     pickupDate: document.getElementById('pickupDate').value,
     pickupTime: document.getElementById('pickupTime').value,
-    note: document.getElementById('custNote').value.trim(),
+    note: document.getElementById('custNote')?.value?.trim()||'',
     slipUrl,
     status: 'pending',
     done: false, cancelled: false, called: false,
@@ -706,7 +706,7 @@ function newOrder() {
   document.getElementById('submitBtn').disabled=true;
   document.getElementById('custName').value='';
   document.getElementById('custPhone').value='';
-  document.getElementById('custNote').value='';
+  const custNote=document.getElementById('custNote'); if(custNote) custNote.value='';
   document.getElementById('custPhone').value='';
   showStep(1);
 }
