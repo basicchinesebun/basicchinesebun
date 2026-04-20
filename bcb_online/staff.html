@@ -21,17 +21,27 @@
   --radius:14px;--radius-sm:10px;
   --shadow:0 2px 12px rgba(61,31,10,0.10);
 }
-body{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;background:var(--cream);color:var(--brown);min-height:100vh;font-size:17px;padding-bottom:64px;}
+body{font-family:'Noto Sans Lao',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;font-size:18px;padding-bottom:64px;}
 input,textarea{font-size:16px!important;}
-button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:pointer;}
+button{font-family:'Noto Sans Lao',sans-serif;cursor:pointer;}
 
 /* ── Pages ── */
 .page{display:none;}
 .page.active{display:block;}
 
+/* ── Login ── */
+.login-screen{display:flex;position:fixed;inset:0;background:var(--brown);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:32px;}
+.login-screen.hidden{display:none;}
+.l-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--cream);}
+.l-sub{font-size:12px;color:rgba(253,246,238,0.45);letter-spacing:3px;text-transform:uppercase;}
+.l-input{width:100%;max-width:260px;padding:16px;border:2px solid rgba(253,246,238,0.35);border-radius:var(--radius);background:transparent;color:var(--cream);font-size:22px;font-weight:900;text-align:center;letter-spacing:6px;}
+.l-btn{width:100%;max-width:260px;padding:15px;background:var(--cream);color:var(--brown);border:none;border-radius:var(--radius);font-size:16px;font-weight:900;font-family:'Noto Sans Lao',sans-serif;}
+.l-err{font-size:13px;color:#fca5a5;font-weight:700;min-height:20px;}
+.l-hint{font-size:11px;color:rgba(253,246,238,0.2);}
+
 /* ── Toast ── */
 #toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);z-index:9000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;}
-.toast-item{padding:10px 20px;border-radius:30px;font-size:15px;font-weight:700;color:var(--cream);background:var(--brown);box-shadow:0 4px 16px rgba(61,31,10,0.25);animation:fadeUp 0.3s ease;white-space:nowrap;}
+.toast-item{padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;color:var(--cream);background:var(--brown);box-shadow:0 4px 16px rgba(61,31,10,0.25);animation:fadeUp 0.3s ease;white-space:nowrap;}
 .toast-item.green{background:var(--green);}
 .toast-item.red{background:var(--red);}
 .toast-item.blue{background:var(--blue);}
@@ -40,17 +50,17 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 
 /* ── Bottom Nav ── */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--brown);display:flex;border-top:2px solid var(--brown2);z-index:200;}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 4px;border:none;background:transparent;color:rgba(253,246,238,0.45);font-family:'Noto Sans Lao',sans-serif;word-break:break-word;font-size:13px;font-weight:700;gap:3px;cursor:pointer;transition:color 0.15s;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 4px;border:none;background:transparent;color:rgba(253,246,238,0.45);font-family:'Noto Sans Lao',sans-serif;font-size:13px;font-weight:700;gap:3px;cursor:pointer;transition:color 0.15s;}
 .nav-item.active{color:var(--cream);}
 .nav-item:active{opacity:0.7;}
-.nav-icon{font-size:clamp(18px,2.5vw,22px);line-height:1;}
+.nav-icon{font-size:26px;line-height:1;}
 
 /* ── Shared Header ── */
 .hdr{background:var(--brown);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:8px;}
-.hdr-title{font-family:'Playfair Display',serif;font-size:clamp(16px,2.5vw,20px);font-weight:900;color:var(--cream);flex-shrink:0;font-weight:900;color:var(--cream);flex-shrink:0;}
-.hdr-center{font-family:'Playfair Display',serif;font-size:clamp(16px,2.5vw,20px);font-weight:900;color:var(--cream);flex:1;text-align:center;font-weight:900;color:var(--cream);flex:1;text-align:center;}
+.hdr-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--cream);flex-shrink:0;font-weight:900;color:var(--cream);flex-shrink:0;}
+.hdr-center{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--cream);flex:1;text-align:center;font-weight:900;color:var(--cream);flex:1;text-align:center;}
 .hdr-btns{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
-.hbtn{padding:clamp(7px,1.2vw,10px) clamp(9px,1.5vw,12px);border-radius:8px;font-size:clamp(12px,1.5vw,14px);font-weight:900;border:1.5px solid rgba(253,246,238,0.35);background:transparent;color:var(--cream);white-space:nowrap;font-weight:900;border:1.5px solid rgba(253,246,238,0.35);background:transparent;color:var(--cream);white-space:nowrap;}
+.hbtn{padding:10px 13px;border-radius:8px;font-size:15px;font-weight:900;border:1.5px solid rgba(253,246,238,0.35);background:transparent;color:var(--cream);white-space:nowrap;font-weight:900;border:1.5px solid rgba(253,246,238,0.35);background:transparent;color:var(--cream);white-space:nowrap;}
 .hbtn:active{opacity:0.7;}
 .hbtn.blue{border-color:#93c5fd;color:#93c5fd;}
 .hbtn.green{border-color:#86efac;color:#86efac;}
@@ -62,20 +72,16 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 /* ══════════════════════════════════
    PAGE 1 — ORDERS (display)
 ══════════════════════════════════ */
-/* iPhone — single column */
-.layout{display:flex;flex-direction:column;max-width:1200px;margin:0 auto;}
-.sidebar{padding:12px 12px 0;display:flex;flex-direction:column;gap:10px;}
-.main-col{padding:12px;display:flex;flex-direction:column;gap:10px;min-height:200px;}
-
-/* iPad/Tablet — two column side by side */
+.layout{display:grid;grid-template-columns:1fr;max-width:1200px;margin:0 auto;}
 @media(min-width:768px){
-  .layout{display:grid;grid-template-columns:320px 1fr;align-items:start;}
-  .sidebar{position:sticky;top:57px;max-height:calc(100vh - 57px);overflow-y:auto;padding:12px 12px 0;}
-  .main-col{min-height:calc(100vh - 80px);}
+  .layout{grid-template-columns:300px 1fr;align-items:start;}
+  .sidebar{position:sticky;top:49px;max-height:calc(100vh - 49px);overflow-y:auto;}
 }
+.sidebar{padding:12px 12px 0;display:flex;flex-direction:column;gap:10px;}
+.main-col{padding:12px;display:flex;flex-direction:column;gap:10px;}
 
 .card{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);}
-.card-title{font-size:13px;font-weight:900;color:var(--brown3);letter-spacing:0.3px;text-transform:uppercase;margin-bottom:12px;}
+.card-title{font-size:14px;font-weight:900;color:var(--brown3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
 
 /* Collapsible */
 .card-collapsible .card-title{display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:0;user-select:none;}
@@ -86,8 +92,8 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .stat{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:var(--radius-sm);padding:10px 6px;text-align:center;}
-.stat-num{font-size:clamp(22px,3vw,28px);font-weight:900;color:var(--brown);}
-.stat-lbl{font-size:13px;font-weight:700;color:var(--gray3);margin-top:2px;}
+.stat-num{font-size:36px;font-weight:900;color:var(--brown);}
+.stat-lbl{font-size:14px;font-weight:700;color:var(--gray3);margin-top:2px;}
 
 .tsw{width:48px;height:26px;background:var(--cream3);border-radius:13px;cursor:pointer;position:relative;border:none;transition:background 0.2s;flex-shrink:0;}
 .tsw.on{background:var(--brown);}
@@ -95,8 +101,8 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 .tsw.on::after{left:25px;}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cream3);}
 .toggle-row:last-child{border-bottom:none;}
-.toggle-lbl{font-size:16px;font-weight:700;color:var(--brown);}
-.toggle-sub{font-size:12px;color:var(--gray3);margin-top:2px;}
+.toggle-lbl{font-size:18px;font-weight:700;color:var(--brown);}
+.toggle-sub{font-size:11px;color:var(--gray3);margin-top:2px;}
 
 .stock-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--cream2);}
 .stock-row:last-child{border-bottom:none;}
@@ -115,8 +121,8 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 .menu-set-row{display:flex;align-items:center;gap:6px;padding:7px 0;border-bottom:1px solid var(--cream2);}
 .menu-set-row:last-child{border-bottom:none;}
 .menu-set-num{font-size:11px;font-weight:900;color:var(--cream3);min-width:18px;}
-.menu-set-name{flex:2;min-width:0;border:1.5px solid var(--cream3);border-radius:7px;padding:6px 8px;font-size:13px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;color:var(--brown);background:var(--cream);}
-.menu-set-price{width:72px;border:1.5px solid var(--cream3);border-radius:7px;padding:6px 8px;font-size:13px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;text-align:right;color:var(--brown);background:var(--cream);}
+.menu-set-name{flex:2;min-width:0;border:1.5px solid var(--cream3);border-radius:7px;padding:6px 8px;font-size:13px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;color:var(--brown);background:var(--cream);}
+.menu-set-price{width:72px;border:1.5px solid var(--cream3);border-radius:7px;padding:6px 8px;font-size:13px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;text-align:right;color:var(--brown);background:var(--cream);}
 .menu-set-unit{font-size:11px;color:var(--gray3);font-weight:700;flex-shrink:0;}
 .menu-set-img{flex-shrink:0;}
 .menu-set-img label{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border:1.5px solid var(--brown3);border-radius:7px;font-size:14px;cursor:pointer;background:var(--cream);}
@@ -131,36 +137,37 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 .vbar.sp{color:#000;border-color:#000;}
 
 .orders-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.orders-title{font-size:14px;font-weight:900;letter-spacing:0.3px;text-transform:uppercase;color:var(--gray3);}
-.show-done-btn{font-size:13px;font-weight:900;color:var(--brown3);background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:7px;padding:6px 12px;}
+.orders-title{font-size:17px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--gray3);}
+.show-done-btn{font-size:15px;font-weight:900;color:var(--brown3);background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:7px;padding:6px 12px;}
 .olist{display:flex;flex-direction:column;gap:10px;}
-.empty-msg{text-align:center;color:var(--cream3);font-size:16px;font-weight:700;padding:40px 0;}
+.empty-msg{text-align:center;color:var(--cream3);font-size:15px;font-weight:700;padding:40px 0;}
 
 .ocard{background:var(--warm-white);border:2px solid var(--brown);border-radius:var(--radius);overflow:hidden;}
 .ocard.done{border-color:var(--cream3);}
 .ocard.cancelled{border-color:#fca5a5;background:#fff9f9;}
 .ocard.hidden{display:none;}
 @keyframes highlight{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 3px var(--brown)}}
-.istrip{display:flex;flex-wrap:wrap;background:var(--cream2);min-height:80px;}
-.iitem{flex-shrink:0;width:80px;height:80px;position:relative;}
+.istrip{display:flex;overflow-x:auto;scrollbar-width:none;background:var(--cream2);min-height:100px;}
+.istrip::-webkit-scrollbar{display:none;}
+.iitem{flex-shrink:0;width:100px;height:100px;position:relative;}
 .iitem img,.iemoji{width:100%;height:100%;object-fit:cover;}
-.iemoji{display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--cream2);}
-.iqty{position:absolute;bottom:4px;right:4px;background:rgba(61,31,10,0.8);color:var(--cream);font-size:12px;font-weight:900;border-radius:5px;padding:2px 5px;}
+.iemoji{display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--cream2);}
+.iqty{position:absolute;bottom:5px;right:5px;background:rgba(61,31,10,0.8);color:var(--cream);font-size:12px;font-weight:900;border-radius:5px;padding:2px 6px;}
 .obody{padding:14px;}
 .ohead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
-.oqnum{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,30px);font-weight:900;line-height:1;color:var(--brown);}
+.oqnum{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;line-height:1;color:var(--brown);}
 .oright{text-align:right;}
-.otime{font-size:14px;font-weight:700;color:var(--gray3);}
-.tag{display:inline-block;font-size:12px;font-weight:900;border-radius:5px;padding:2px 8px;letter-spacing:1px;margin-top:3px;}
+.otime{font-size:16px;font-weight:700;color:var(--gray3);}
+.tag{display:inline-block;font-size:10px;font-weight:900;border-radius:5px;padding:2px 8px;letter-spacing:1px;margin-top:3px;}
 .tag-called{background:var(--brown);color:var(--cream);}
 .tag-done{background:var(--green-bg);color:var(--green);}
 .tag-cancelled{background:var(--red-bg);color:var(--red);}
-.oitems{font-size:clamp(13px,1.8vw,16px);font-weight:700;color:var(--brown2);line-height:1.9;white-space:pre-line;margin-bottom:8px;}
-.ototal{font-size:20px;font-weight:900;margin-bottom:12px;color:var(--brown);}
+.oitems{font-size:20px;font-weight:700;color:var(--brown2);line-height:1.9;white-space:pre-line;margin-bottom:8px;}
+.ototal{font-size:24px;font-weight:900;margin-bottom:12px;color:var(--brown);}
 .oactions{display:flex;gap:7px;flex-wrap:wrap;}
-.abtn{padding:14px 10px;border-radius:10px;font-size:15px;font-weight:900;border:none;text-align:center;flex:1;min-width:0;font-weight:900;border:none;text-align:center;flex:1;min-width:0;}
+.abtn{padding:14px 10px;border-radius:10px;font-size:17px;font-weight:900;border:none;text-align:center;flex:1;min-width:0;font-weight:900;border:none;text-align:center;flex:1;min-width:0;}
 .abtn:active{opacity:0.7;}
-.abtn-one{background:var(--brown);color:var(--cream);flex:4;font-size:17px;}
+.abtn-one{background:var(--brown);color:var(--cream);flex:4;font-size:18px;}
 .abtn-call{background:var(--brown2);color:var(--cream);flex:2;}
 .abtn-rep{background:var(--warm-white);color:var(--brown);border:1.5px solid var(--brown3)!important;}
 .abtn-print{background:var(--blue-bg);color:var(--blue);border:1.5px solid #93c5fd!important;}
@@ -176,9 +183,9 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(61,31,10,0.55);z-index:500;align-items:center;justify-content:center;padding:20px;}
 .modal-bg.show{display:flex;}
 .modal{background:var(--warm-white);border:2px solid var(--brown);border-radius:18px;max-width:360px;width:100%;padding:22px;}
-.modal-title{font-size:18px;font-weight:900;text-align:center;margin-bottom:7px;color:var(--brown);}
+.modal-title{font-size:17px;font-weight:900;text-align:center;margin-bottom:7px;color:var(--brown);}
 .modal-sub{font-size:12px;color:var(--gray3);font-weight:700;text-align:center;margin-bottom:18px;}
-.mbtn{width:100%;padding:14px;border-radius:var(--radius-sm);font-size:16px;font-weight:900;margin-bottom:9px;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:pointer;}
+.mbtn{width:100%;padding:14px;border-radius:var(--radius-sm);font-size:14px;font-weight:900;margin-bottom:9px;font-family:'Noto Sans Lao',sans-serif;cursor:pointer;}
 .mbtn.black{background:var(--brown);color:var(--cream);border:none;}
 .mbtn.outline{background:var(--warm-white);color:var(--brown);border:1.5px solid var(--brown);}
 .mbtn.red{background:var(--warm-white);color:var(--red);border:1.5px solid var(--red);}
@@ -188,10 +195,10 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 ══════════════════════════════════ */
 .sales-content{max-width:480px;margin:0 auto;padding:16px 14px;}
 .date-row{display:flex;gap:8px;align-items:center;margin-bottom:16px;}
-.dlbl{font-size:12px;font-weight:900;color:var(--gray3);letter-spacing:0.3px;text-transform:uppercase;}
-.dsel{border:1.5px solid var(--brown3);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;background:var(--warm-white);color:var(--brown);cursor:pointer;flex:1;}
+.dlbl{font-size:12px;font-weight:900;color:var(--gray3);letter-spacing:2px;text-transform:uppercase;}
+.dsel{border:1.5px solid var(--brown3);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;background:var(--warm-white);color:var(--brown);cursor:pointer;flex:1;}
 .chart-box{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:14px;padding:16px;margin-bottom:16px;}
-.chart-title{font-size:11px;font-weight:900;color:var(--gray3);letter-spacing:0.3px;text-transform:uppercase;margin-bottom:12px;}
+.chart-title{font-size:11px;font-weight:900;color:var(--gray3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
 .chart-wrap{position:relative;height:160px;display:flex;align-items:flex-end;gap:6px;padding-bottom:24px;}
 .cbar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
 .cbar{width:100%;background:var(--brown);border-radius:6px 6px 0 0;min-height:2px;position:relative;transition:height 0.4s;}
@@ -199,39 +206,39 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 .cbar-lbl{font-size:9px;font-weight:700;color:var(--gray3);margin-top:4px;text-align:center;}
 .chart-empty{text-align:center;color:var(--cream3);font-size:13px;font-weight:700;padding:40px 0;}
 .total-box{background:var(--brown);border-radius:14px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.total-lbl{font-size:13px;font-weight:700;color:rgba(253,246,238,0.6);letter-spacing:0.3px;text-transform:uppercase;}
-.total-amt{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,28px);font-weight:900;color:var(--cream);font-weight:900;color:var(--cream);}
+.total-lbl{font-size:13px;font-weight:700;color:rgba(253,246,238,0.6);letter-spacing:2px;text-transform:uppercase;}
+.total-amt{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;color:var(--cream);font-weight:900;color:var(--cream);}
 .scards{display:flex;gap:10px;margin-bottom:16px;}
 .sc{flex:1;background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:14px;padding:14px 10px;text-align:center;}
-.sc-num{font-size:clamp(20px,3vw,26px);font-weight:900;color:var(--brown);}
-.sc-lbl{font-size:12px;font-weight:700;color:var(--gray3);margin-top:4px;letter-spacing:1px;text-transform:uppercase;}
+.sc-num{font-size:36px;font-weight:900;color:var(--brown);}
+.sc-lbl{font-size:10px;font-weight:700;color:var(--gray3);margin-top:4px;letter-spacing:1px;text-transform:uppercase;}
 .divider{height:2px;background:var(--cream3);border-radius:2px;margin:16px 0;}
-.sec-t{font-size:11px;font-weight:900;letter-spacing:0.5px;text-transform:uppercase;color:var(--gray3);margin-bottom:12px;}
+.sec-t{font-size:11px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--gray3);margin-bottom:12px;}
 .mb-box{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:12px;padding:14px;margin-bottom:16px;}
 .mb-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cream2);}
 .mb-row:last-child{border-bottom:none;}
-.mb-name{font-size:15px;font-weight:700;color:var(--brown);}
-.mb-qty{font-size:15px;font-weight:900;color:var(--brown2);}
+.mb-name{font-size:17px;font-weight:700;color:var(--brown);}
+.mb-qty{font-size:17px;font-weight:900;color:var(--brown2);}
 .sale-list{display:flex;flex-direction:column;gap:8px;}
 .scard{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:12px;padding:12px 14px;}
 .scard-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
-.scard-qnum{font-size:17px;font-weight:900;color:var(--brown);}
+.scard-qnum{font-size:20px;font-weight:900;color:var(--brown);}
 .scard-time{font-size:11px;font-weight:700;color:var(--gray3);}
-.scard-items{font-size:14px;font-weight:700;color:var(--brown2);line-height:1.7;white-space:pre-line;margin-bottom:4px;}
-.scard-total{font-size:16px;font-weight:900;text-align:right;color:var(--brown);}
+.scard-items{font-size:16px;font-weight:700;color:var(--brown2);line-height:1.7;white-space:pre-line;margin-bottom:4px;}
+.scard-total{font-size:18px;font-weight:900;text-align:right;color:var(--brown);}
 .s-empty{text-align:center;color:var(--cream3);font-size:14px;font-weight:700;padding:40px 0;}
-.clear-btn{width:100%;padding:13px;background:var(--warm-white);color:var(--red);border:1.5px solid var(--red);border-radius:12px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;margin-top:8px;}
+.clear-btn{width:100%;padding:13px;background:var(--warm-white);color:var(--red);border:1.5px solid var(--red);border-radius:12px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;margin-top:8px;}
 
 /* ══════════════════════════════════
    PAGE 3 — RECEIPT
 ══════════════════════════════════ */
 .receipt-content{max-width:480px;margin:0 auto;padding:16px 14px;display:flex;flex-direction:column;gap:14px;}
 .rcard{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:16px;padding:18px;}
-.rcard-title{font-size:13px;font-weight:900;color:var(--brown3);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:14px;}
+.rcard-title{font-size:11px;font-weight:900;color:var(--brown3);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
 .field{margin-bottom:12px;}
 .field:last-child{margin-bottom:0;}
 .field label{display:block;font-size:13px;font-weight:900;color:var(--brown2);margin-bottom:6px;}
-.field input,.field textarea{width:100%;border:1.5px solid var(--cream3);border-radius:10px;padding:11px 13px;font-size:16px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;resize:none;background:var(--cream);color:var(--brown);}
+.field input,.field textarea{width:100%;border:1.5px solid var(--cream3);border-radius:10px;padding:11px 13px;font-size:16px;font-weight:700;font-family:'Noto Sans Lao',sans-serif;resize:none;background:var(--cream);color:var(--brown);}
 .field textarea{height:75px;}
 .logo-wrap{display:flex;gap:12px;align-items:center;}
 .logo-preview{width:72px;height:72px;border:1.5px solid var(--cream3);border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--cream2);flex-shrink:0;}
@@ -245,26 +252,36 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 .rtsw.on{background:var(--brown);}
 .rtsw::after{content:'';position:absolute;width:22px;height:22px;background:var(--cream);border-radius:50%;top:3px;left:3px;transition:left 0.2s;}
 .rtsw.on::after{left:23px;}
-.save-btn{width:100%;padding:17px;background:var(--brown);color:var(--cream);border:none;border-radius:14px;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;font-size:17px;font-weight:900;cursor:pointer;}
+.save-btn{width:100%;padding:17px;background:var(--brown);color:var(--cream);border:none;border-radius:14px;font-family:'Noto Sans Lao',sans-serif;font-size:17px;font-weight:900;cursor:pointer;}
 .saved-msg{text-align:center;font-size:14px;font-weight:700;color:var(--green);display:none;margin-top:8px;}
 .prev-outer{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:16px;padding:18px;}
-.prev-lbl{font-size:11px;font-weight:900;color:var(--gray3);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:14px;}
+.prev-lbl{font-size:11px;font-weight:900;color:var(--gray3);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
 .receipt-paper{font-family:'IBM Plex Mono',monospace;background:#fff;border:1.5px dashed var(--cream3);border-radius:10px;padding:18px 14px;max-width:300px;margin:0 auto;font-size:13px;line-height:1.6;}
 .r-logo{width:80px;height:80px;object-fit:contain;display:block;margin:0 auto 10px;}
 .r-shop{font-size:18px;font-weight:700;text-align:center;line-height:1.3;}
 .r-addr,.r-phone{font-size:11px;text-align:center;color:#555;margin-top:2px;}
 .r-div{border:none;border-top:1.5px dashed var(--cream3);margin:10px 0;}
-.r-qlbl{font-size:11px;text-align:center;color:#888;letter-spacing:0.3px;text-transform:uppercase;}
+.r-qlbl{font-size:11px;text-align:center;color:#888;letter-spacing:2px;text-transform:uppercase;}
 .r-qnum{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;text-align:center;line-height:1.1;}
 .r-time{font-size:11px;color:#888;margin-top:4px;}
 .r-item{display:flex;justify-content:space-between;font-size:13px;font-weight:700;padding:2px 0;line-height:1.6;}
 .r-total{display:flex;justify-content:space-between;font-size:16px;font-weight:700;margin-top:4px;}
 .r-foot{font-size:12px;text-align:center;color:#555;margin-top:10px;line-height:1.6;font-style:italic;}
-.ptest-btn{width:100%;padding:14px;background:var(--warm-white);color:var(--blue);border:1.5px solid var(--blue);border-radius:14px;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;font-size:15px;font-weight:900;cursor:pointer;margin-top:14px;}
+.ptest-btn{width:100%;padding:14px;background:var(--warm-white);color:var(--blue);border:1.5px solid var(--blue);border-radius:14px;font-family:'Noto Sans Lao',sans-serif;font-size:15px;font-weight:900;cursor:pointer;margin-top:14px;}
 input[type=file]{display:none;}
 </style>
 </head>
 <body>
+
+<!-- Login -->
+<div class="login-screen" id="loginScreen">
+  <div class="l-logo">Basic Chinese Bun</div>
+  <div class="l-sub">Staff Only</div>
+  <input class="l-input" id="pinInput" type="password" inputmode="numeric" placeholder="PIN" maxlength="6">
+  <button class="l-btn" onclick="doLogin()">ເຂົ້າສູ່ລະບົບ</button>
+  <div class="l-err" id="loginErr"></div>
+  <div class="l-hint" id="pinHint"></div>
+</div>
 
 <div id="toast"></div>
 
@@ -275,12 +292,11 @@ input[type=file]{display:none;}
   <div class="hdr">
     <div class="hdr-title">Basic Chinese Bun</div>
     <div class="hdr-btns">
-      <button class="hbtn" id="shopStatusBtn" onclick="toggleShop()" style="border-color:#86efac;color:#86efac;">🟢 ເປີດຮ້ານ</button>
+      <button class="hbtn" id="shopBtn" onclick="toggleShop()" style="border-color:#86efac;color:#86efac;font-weight:900;">🟢 ເປີດ</button>
       <button class="hbtn blue" id="printerBtn" onclick="connectPrinter()">🖨 ເຊື່ອມ</button>
       <div class="notif-wrap">
         <button class="hbtn" onclick="clearNotif()">🔔<span class="notif-dot" id="notifDot"></span></button>
       </div>
-      <button class="hbtn" onclick="showHistorySearch()">📋 ປະຫວັດ</button>
       <button class="hbtn red" onclick="showModal('resetModal')">↺</button>
     </div>
   </div>
@@ -293,25 +309,6 @@ input[type=file]{display:none;}
         <div class="stat"><div class="stat-num" id="sWaiting">0</div><div class="stat-lbl">ລໍຖ້າ</div></div>
         <div class="stat"><div class="stat-num" id="sDone">0</div><div class="stat-lbl">ສຳເລັດ</div></div>
         <div class="stat"><div class="stat-num" id="sAll">0</div><div class="stat-lbl">ທັງໝົດ</div></div>
-      </div>
-
-      <!-- ปุ่มเปิด/ปิดร้าน -->
-      <div id="shopStatusCard" style="border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(61,31,10,0.1);">
-        <button id="shopToggleBtn" onclick="toggleShop()" style="width:100%;padding:16px;font-size:18px;font-weight:900;border:none;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;border-radius:14px;">
-          🔴 ຮ້ານປິດ — ກົດເພື່ອເປີດ
-        </button>
-      </div>
-
-      <!-- ค้นหาประวัติด้วยเบอร์โทร -->
-      <div class="card card-collapsible collapsed" id="historyCard">
-        <div class="card-title" onclick="toggleCard('historyCard')">🔍 ຄົ້ນຫາປະຫວັດ</div>
-        <div class="card-body">
-          <div style="display:flex;gap:8px;margin-bottom:10px;">
-            <input id="histSearchPhone" type="tel" placeholder="ເບີໂທ..." style="flex:1;border:2px solid var(--cream3);border-radius:10px;padding:10px;font-size:15px;font-family:'Noto Sans Lao',sans-serif;color:var(--brown);background:var(--cream);">
-            <button onclick="searchStaffHistory()" style="padding:10px 14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:14px;font-weight:900;font-family:'Noto Sans Lao',sans-serif;">ຄົ້ນ</button>
-          </div>
-          <div id="staffHistoryList"></div>
-        </div>
       </div>
 
       <div class="pstatus" id="pStatus"></div>
@@ -341,29 +338,12 @@ input[type=file]{display:none;}
         </div>
       </div>
 
-      <!-- Stock 3 ชั้น (collapsible) -->
+      <!-- Stock (collapsible) -->
       <div class="card card-collapsible collapsed" id="stockCard">
         <div class="card-title" onclick="toggleCard('stockCard')">📦 ສຕ໋ອກ / Stock</div>
         <div class="card-body">
-          <!-- Tab selector -->
-          <div style="display:flex;gap:6px;margin-bottom:12px;">
-            <button onclick="switchStockTab('total')" id="stab-total" style="flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:900;border:2px solid var(--brown);background:var(--brown);color:var(--cream);font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">📦 ລວມ</button>
-            <button onclick="switchStockTab('walkin')" id="stab-walkin" style="flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:900;border:2px solid var(--cream3);background:var(--warm-white);color:var(--brown);font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">🏪 ໜ້າຮ້ານ</button>
-            <button onclick="switchStockTab('online')" id="stab-online" style="flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:900;border:2px solid var(--cream3);background:var(--warm-white);color:var(--brown);font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">🌐 ອອນໄລນ໌</button>
-          </div>
-          <!-- ปุ่มแจกจ่าย -->
-          <div id="distributeBtn" style="display:none;margin-bottom:10px;">
-            <button onclick="showDistribute()" style="width:100%;padding:10px;background:var(--brown2);color:var(--cream);border:none;border-radius:10px;font-size:14px;font-weight:900;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">⚖️ ແຈກຈ່າຍໃຫ້ໜ້າຮ້ານ + ອອນໄລນ໌</button>
-          </div>
           <div id="stockList"></div>
-          <button onclick="saveStockManual()" style="width:100%;margin-top:10px;padding:14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">💾 ບັນທຶກສຕ໋ອກ</button>
-      <div class="modal-bg" id="distributeModal">
-        <div class="modal" style="max-width:400px;">
-          <div class="modal-title">⚖️ ແຈກຈ່າຍສຕ໋ອກ</div>
-          <div class="modal-sub">ກຳນົດຈຳນວນໃຫ້ແຕ່ລະຊ່ອງທາງ</div>
-          <div id="distributeList" style="max-height:50vh;overflow-y:auto;margin-bottom:14px;"></div>
-          <button class="mbtn black" onclick="applyDistribute()">✅ ຢືນຢັນ</button>
-          <button class="mbtn outline" onclick="hideModal('distributeModal')">ຍົກເລີກ</button>
+          <button onclick="saveStockNow()" style="width:100%;margin-top:10px;padding:14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">💾 ບັນທຶກສຕ໋ອກ</button>
         </div>
       </div>
 
@@ -375,10 +355,10 @@ input[type=file]{display:none;}
             <img id="qrPreviewImg" src="" style="width:100%;max-width:200px;border-radius:10px;border:2px solid #000;">
           </div>
           <div id="qrEmptyMsg" style="text-align:center;font-size:13px;color:#bbb;font-weight:700;padding:8px 0 10px;">ຍັງບໍ່ໄດ້ອັບໂຫລດ QR</div>
-          <label style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#000;color:#fff;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">
+          <label style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#000;color:#fff;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">
             📤 ອັບໂຫລດ QR<input type="file" accept="image/*" onchange="uploadQRAdmin(event)">
           </label>
-          <button onclick="removeQR()" id="qrRemoveBtn" style="display:none;width:100%;margin-top:8px;padding:10px;background:#fff;color:#c00;border:2px solid #c00;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;word-break:break-word;">✕ ລຶບ QR</button>
+          <button onclick="removeQR()" id="qrRemoveBtn" style="display:none;width:100%;margin-top:8px;padding:10px;background:#fff;color:#c00;border:2px solid #c00;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">✕ ລຶບ QR</button>
         </div>
       </div>
 
@@ -401,10 +381,7 @@ input[type=file]{display:none;}
     <div class="main-col">
       <div class="orders-header">
         <div class="orders-title">ລາຍການ · Orders</div>
-        <div style="display:flex;gap:6px;">
-          <button class="show-done-btn" id="showCancelBtn" onclick="toggleCancelled()" style="color:var(--red);border-color:#fca5a5;">🗑 ຍົກເລີກ</button>
-          <button class="show-done-btn" id="showDoneBtn" onclick="toggleDone()">ສະແດງສຳເລັດ</button>
-        </div>
+        <button class="show-done-btn" id="showDoneBtn" onclick="toggleDone()">ສະແດງສຳເລັດ</button>
       </div>
       <div class="olist" id="orderList"><div class="empty-msg">ຍັງບໍ່ມີລາຍການ</div></div>
     </div>
@@ -462,7 +439,7 @@ input[type=file]{display:none;}
 ══════════════════════════════════ -->
 <div class="page" id="page-receipt">
   <div class="hdr">
-    <div class="hdr-center">ອອກແບບໃບບິນ · Receipt</div>
+    <div class="hdr-center">ອອກແບບໃບເສດ · Receipt</div>
   </div>
   <div class="receipt-content">
     <div class="rcard">
@@ -513,7 +490,7 @@ input[type=file]{display:none;}
   </button>
   <button class="nav-item" id="nav-receipt" onclick="switchPage('receipt')">
     <span class="nav-icon">🧾</span>
-    <span>ໃບບິນ</span>
+    <span>ໃບເສດ</span>
   </button>
 </nav>
 
@@ -522,7 +499,7 @@ input[type=file]{display:none;}
 const ESC = 0x1B, GS = 0x1D;
 const EMOJIS = ['🥟','🍫','🍵','🧁','🍞','🥐','🍮'];
 let btDevice = null, btChar = null;
-let voices = [], showDone = false, showCancelled = false, autoPrint = false, soundOn = true;
+let voices = [], showDone = false, autoPrint = false, soundOn = true;
 let lastPendingCount = 0, undoStack = [];
 
 // ── Page switching (replaces cross-file links) ──
@@ -545,63 +522,27 @@ function toast(msg, type='', duration=2500) {
   setTimeout(() => el.remove(), duration);
 }
 
-// ── Shop Open/Close ──
-function getShopStatus() { return JSON.parse(localStorage.getItem('bcb_shop')||'{"open":false,"dates":[]}'); }
-function saveShopStatus(s) {
-  localStorage.setItem('bcb_shop', JSON.stringify(s));
-  if(fbDb){
-    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-      set(ref(fbDb,'shop'),s).catch(()=>{});
-    });
-  }
+// ── Login ──
+function checkLogin() {
+  if (sessionStorage.getItem('bcb_logged') === '1')
+    document.getElementById('loginScreen').classList.add('hidden');
+  if (!localStorage.getItem('bcb_pin'))
+    document.getElementById('pinHint').textContent = 'PIN ເລີ່ມຕົ້ນ: 1234';
 }
-function toggleShop() {
-  const s = getShopStatus();
-  s.open = !s.open;
-  if(s.open) {
-    const today = new Date().toISOString().split('T')[0];
-    if(!s.dates.includes(today)) s.dates.push(today);
-  }
-  saveShopStatus(s);
-  renderShopStatus();
-  toast(s.open ? '🟢 ເປີດຮ້ານແລ້ວ' : '🔴 ປິດຮ້ານແລ້ວ', s.open?'green':'orange');
-}
-function renderShopStatus() {
-  const s = getShopStatus();
-  const btn = document.getElementById('shopToggleBtn');
-  if(!btn) return;
-  if(s.open) {
-    btn.textContent = '🟢 ຮ້ານເປີດຢູ່ — ກົດເພື່ອປິດ';
-    btn.style.background = 'var(--green-bg)';
-    btn.style.color = 'var(--green)';
-    btn.style.border = '2px solid var(--green)';
+function doLogin() {
+  const pin = localStorage.getItem('bcb_pin') || '1234';
+  const val = document.getElementById('pinInput').value;
+  if (val === pin) {
+    sessionStorage.setItem('bcb_logged', '1');
+    document.getElementById('loginScreen').classList.add('hidden');
+    toast('ຍິນດີຕ້ອນຮັບ! 👋', 'green');
   } else {
-    btn.textContent = '🔴 ຮ້ານປິດ — ກົດເພື່ອເປີດ';
-    btn.style.background = 'var(--red-bg)';
-    btn.style.color = 'var(--red)';
-    btn.style.border = '2px solid var(--red)';
+    document.getElementById('loginErr').textContent = '❌ PIN ບໍ່ຖືກຕ້ອງ';
+    document.getElementById('pinInput').value = '';
+    setTimeout(() => document.getElementById('loginErr').textContent = '', 2000);
   }
 }
-
-// ── Staff History Search ──
-function searchStaffHistory() {
-  const phone = document.getElementById('histSearchPhone').value.trim();
-  const list = document.getElementById('staffHistoryList');
-  if(!phone) { list.innerHTML='<div style="color:var(--gray3);font-size:13px;text-align:center;padding:10px;">ກະລຸນາໃສ່ເບີໂທ</div>'; return; }
-  const orders = getOrders().filter(o => o.custPhone === phone || o.phone === phone);
-  if(!orders.length) { list.innerHTML='<div style="color:var(--gray3);font-size:13px;text-align:center;padding:10px;">ບໍ່ພົບປະຫວັດ</div>'; return; }
-  const colorMap = {pending:'var(--orange)',confirmed:'var(--green)',rejected:'var(--red)'};
-  list.innerHTML = orders.map(o=>`
-    <div style="border:1.5px solid var(--cream3);border-radius:10px;padding:10px;margin-bottom:8px;background:var(--warm-white);">
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-        <div style="font-size:15px;font-weight:900;color:var(--brown);">ຄິວ ${String(o.num).padStart(3,'0')}</div>
-        <div style="font-size:12px;color:var(--gray3);">${o.time||''} ${o.pickupDate||''}</div>
-      </div>
-      <div style="font-size:13px;color:var(--brown2);margin-bottom:4px;">${o.items||''}</div>
-      <div style="font-size:13px;font-weight:900;color:var(--brown);">${o.total?o.total.toLocaleString()+' ກີບ':'—'}</div>
-      ${o.cancelled?'<span style="font-size:11px;background:var(--red-bg);color:var(--red);border-radius:5px;padding:2px 8px;">✕ ຍົກເລີກ</span>':o.done?'<span style="font-size:11px;background:var(--green-bg);color:var(--green);border-radius:5px;padding:2px 8px;">✓ ສຳເລັດ</span>':'<span style="font-size:11px;background:var(--orange-bg);color:var(--orange);border-radius:5px;padding:2px 8px;">⏳ ລໍຖ້າ</span>'}
-    </div>`).join('');
-}
+document.getElementById('pinInput').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
 
 // ── Settings ──
 function loadSettings() {
@@ -626,10 +567,9 @@ function numThai(n) {
 }
 function announce(num) {
   window.speechSynthesis.cancel();
-  const numStr = String(num).padStart(3, '0');
-  const u=new SpeechSynthesisUtterance(`หมายเลข ${numStr} รับสินค้าได้เลยค่ะ`);
+  const u=new SpeechSynthesisUtterance(`คิว${numThai(num)} ได้แล้วครับ ขอบคุณครับ`);
   const v=voices.find(v=>v.lang==='th-TH')||voices.find(v=>v.lang.startsWith('th'))||voices[0];
-  if (v) u.voice=v; u.lang='th-TH'; u.rate=0.85; u.volume=1.0;
+  if (v) u.voice=v; u.lang='th-TH'; u.rate=0.88; u.volume=1.0;
   const b=document.getElementById('vbar');
   u.onstart=()=>{b.textContent=`🔊 ຄິວ ${String(num).padStart(3,'0')}`;b.className='vbar sp';};
   u.onend=u.onerror=()=>{b.textContent='🔇 ລໍຖ້າ';b.className='vbar';};
@@ -662,137 +602,17 @@ function getMenuNames() {
   const s=localStorage.getItem('bcb_menus');
   return s?JSON.parse(s):[{lo:'ຊາລາເປົາໝູສັບ'},{lo:'ໝັນໂຖ Dark Chocolate'},{lo:'ໝັນໂຖ Matcha'},{lo:'ເມນູ 4'},{lo:'ເມນູ 5'},{lo:'ເມນູ 6'},{lo:'ເມນູ 7'}];
 }
-// ── Stock 3 ชั้น ──
-let currentStockTab = 'total';
-function getStock(type='total') {
-  const key = type==='total'?'bcb_stock':type==='walkin'?'bcb_stock_walkin':'bcb_stock_online';
-  const s = localStorage.getItem(key);
-  return s ? JSON.parse(s) : new Array(getMenuNames().length).fill(0);
+function getStock() { const s=localStorage.getItem('bcb_stock'); return s?JSON.parse(s):new Array(7).fill(0); }
+function saveStock(s) { localStorage.setItem('bcb_stock',JSON.stringify(s)); }
+function changeStock(i,d) {
+  const st=getStock(); st[i]=Math.max(0,(st[i]||0)+d); saveStock(st);
+  _updateStockRow(i,st[i]);
+  if (st[i]===0) _alertLowStock(getMenuNames()[i]?.lo||'ເມນູ',true);
+  else if (st[i]<=5) _alertLowStock(getMenuNames()[i]?.lo||'ເມນູ',false);
 }
-function saveStock(s, type='total') {
-  const key = type==='total'?'bcb_stock':type==='walkin'?'bcb_stock_walkin':'bcb_stock_online';
-  localStorage.setItem(key, JSON.stringify(s));
-  // sync สต็อกออนไลน์ขึ้น Firebase ด้วย
-  if (type === 'online' && fbDb) {
-    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref, set}) => {
-      set(ref(fbDb, 'stock/online'), s).catch(()=>{});
-    });
-  }
-}
-function switchStockTab(tab) {
-  currentStockTab = tab;
-  ['total','walkin','online'].forEach(t => {
-    const btn = document.getElementById('stab-'+t);
-    if (!btn) return;
-    if (t === tab) {
-      btn.style.background = 'var(--brown)';
-      btn.style.color = 'var(--cream)';
-      btn.style.borderColor = 'var(--brown)';
-    } else {
-      btn.style.background = 'var(--warm-white)';
-      btn.style.color = 'var(--brown)';
-      btn.style.borderColor = 'var(--cream3)';
-    }
-  });
-  const distBtn = document.getElementById('distributeBtn');
-  if (distBtn) distBtn.style.display = tab==='total' ? 'block' : 'none';
-  renderStock();
-}
-function changeStock(i, d) {
-  const st = getStock(currentStockTab);
-  st[i] = Math.max(0, (st[i]||0)+d);
-  saveStock(st, currentStockTab);
-  _updateStockRow(i, st[i]);
-  if (document.activeElement) document.activeElement.blur();
-}
-function commitStock(i, val) {
-  const st = getStock(currentStockTab);
-  st[i] = Math.max(0, parseInt(val)||0);
-  saveStock(st, currentStockTab);
-  _updateStockRow(i, st[i]);
-}
-function _updateStockRow(i, qty) {
-  const inp = document.getElementById('si-'+i);
-  if (inp) { inp.value=qty; inp.className='sinput'+(qty===0?' out':qty<=5?' low':''); }
-}
-function renderStock() {
-  const mn = getMenuNames();
-  const st = getStock(currentStockTab);
-  const stTotal = getStock('total');
-  const tabLabel = currentStockTab==='total'?'ສຕ໋ອກລວມ':currentStockTab==='walkin'?'ສຕ໋ອກໜ້າຮ້ານ':'ສຕ໋ອກອອນໄລນ໌';
-  document.getElementById('stockList').innerHTML = `
-    <div style="font-size:11px;font-weight:900;color:var(--gray3);letter-spacing:0.3px;text-transform:uppercase;margin-bottom:8px;">${tabLabel}</div>
-  ` + mn.map((m, i) => {
-    const q = st[i]||0;
-    const cls = q===0?' out':q<=5?' low':'';
-    return `<div class="stock-row">
-      <div class="stock-name">${m.lo}</div>
-      <div class="sctrl">
-        <button class="sbtn" onclick="changeStock(${i},-1)">−</button>
-        <input class="sinput${cls}" type="text" inputmode="numeric" pattern="[0-9]*" id="si-${i}" value="${q}"
-          onclick="this.select();event.preventDefault();" onblur="commitStock(${i},this.value)"
-          onkeydown="if(event.key==='Enter'){commitStock(${i},this.value);this.blur();}">
-        <button class="sbtn" onclick="changeStock(${i},1)">+</button>
-      </div></div>`;
-  }).join('');
-}
-
-// ── Distribute stock ──
-function showDistribute() {
-  const mn = getMenuNames();
-  const stTotal = getStock('total');
-  const stWalkin = getStock('walkin');
-  const stOnline = getStock('online');
-  document.getElementById('distributeList').innerHTML = mn.map((m, i) => `
-    <div style="padding:10px 0;border-bottom:1px solid var(--cream2);">
-      <div style="font-size:14px;font-weight:900;color:var(--brown);margin-bottom:6px;">${m.lo} <span style="font-size:12px;color:var(--gray3);font-weight:700;">(ລວມ: ${stTotal[i]||0})</span></div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <div style="flex:1;">
-          <div style="font-size:11px;font-weight:700;color:var(--gray3);margin-bottom:3px;">🏪 ໜ້າຮ້ານ</div>
-          <input type="text" inputmode="numeric" id="dist-walkin-${i}" value="${stWalkin[i]||0}" style="width:100%;border:1.5px solid var(--cream3);border-radius:8px;padding:6px;text-align:center;font-size:15px;font-weight:900;color:var(--brown);background:var(--cream);">
-        </div>
-        <div style="font-size:18px;color:var(--cream3);padding-top:16px;">+</div>
-        <div style="flex:1;">
-          <div style="font-size:11px;font-weight:700;color:var(--gray3);margin-bottom:3px;">🌐 ອອນໄລນ໌</div>
-          <input type="text" inputmode="numeric" id="dist-online-${i}" value="${stOnline[i]||0}" style="width:100%;border:1.5px solid var(--cream3);border-radius:8px;padding:6px;text-align:center;font-size:15px;font-weight:900;color:var(--brown);background:var(--cream);">
-        </div>
-      </div>
-    </div>`).join('');
-  showModal('distributeModal');
-}
-function saveStockManual() {
-  const st = getStock(currentStockTab);
-  saveStock(st, currentStockTab);
-  // sync ขึ้น Firebase
-  if(fbDb) {
-    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-      const key = currentStockTab==='online'?'stock/online':currentStockTab==='walkin'?'stock/walkin':'stock/total';
-      set(ref(fbDb, key), st).then(()=>toast('💾 ບັນທຶກສຕ໋ອກ ✅ — sync ແລ້ວ','green')).catch(()=>toast('💾 ບັນທຶກສຕ໋ອກ ✅','green'));
-    });
-  } else {
-    toast('💾 ບັນທຶກສຕ໋ອກ ✅','green');
-  }
-}
-
-function applyDistribute() {
-  const mn = getMenuNames();
-  const stTotal = getStock('total');
-  const newWalkin = new Array(mn.length).fill(0);
-  const newOnline = new Array(mn.length).fill(0);
-  let valid = true;
-  mn.forEach((m, i) => {
-    const w = parseInt(document.getElementById('dist-walkin-'+i)?.value)||0;
-    const o = parseInt(document.getElementById('dist-online-'+i)?.value)||0;
-    if (w+o > (stTotal[i]||0)) { toast(`⚠️ ${m.lo}: ເກີນສຕ໋ອກລວມ (${stTotal[i]||0})`, 'orange'); valid=false; return; }
-    newWalkin[i] = w;
-    newOnline[i] = o;
-  });
-  if (!valid) return;
-  saveStock(newWalkin, 'walkin');
-  saveStock(newOnline, 'online');
-  hideModal('distributeModal');
-  toast('ແຈກຈ່າຍສຕ໋ອກ ✅', 'green');
-  renderStock();
+function commitStock(i,val) {
+  const st=getStock(); st[i]=Math.max(0,parseInt(val)||0); saveStock(st);
+  _updateStockRow(i,st[i]);
 }
 function _updateStockRow(i,qty) {
   const inp=document.getElementById('si-'+i),badge=document.getElementById('sb-'+i);
@@ -812,21 +632,33 @@ function _alertLowStock(name,isOut) {
     const o=ctx.createOscillator();o.connect(g);o.frequency.value=isOut?440:660;o.start();o.stop(ctx.currentTime+0.3);
   } catch(e){}
 }
-function deductStock(itemsText, type='walkin') {
-  const mn=getMenuNames(), st=getStock(type), stTotal=getStock('total');
+function deductStock(itemsText) {
+  const mn=getMenuNames(),st=getStock();
   itemsText.split('\n').forEach(line=>{
     if (!line.trim()) return;
     const qtyMatch=line.match(/x(\d+)/);
     const qty=qtyMatch?parseInt(qtyMatch[1]):1;
     const idx=mn.findIndex(m=>line.includes(m.lo));
-    if (idx>=0) {
-      st[idx]=Math.max(0,(st[idx]||0)-qty);
-      stTotal[idx]=Math.max(0,(stTotal[idx]||0)-qty);
-    }
+    if (idx>=0) { st[idx]=Math.max(0,(st[idx]||0)-qty); }
   });
-  saveStock(st, type);
-  saveStock(stTotal, 'total');
-  renderStock();
+  saveStock(st); renderStock();
+}
+function renderStock() {
+  const mn=getMenuNames(),st=getStock();
+  document.getElementById('stockList').innerHTML=mn.map((m,i)=>{
+    const q=st[i]||0,cls=q===0?' out':q<=5?' low':'';
+    const bs=q===0||q<=5,bt=q===0?'ໝົດ':'ໃກ້ໝົດ',bc=q===0?'out':'low';
+    return `<div class="stock-row">
+      <div class="stock-name">${m.lo}</div>
+      <span class="sbadge ${bc}" id="sb-${i}" style="${bs?'':'display:none'}">${bt}</span>
+      <div class="sctrl">
+        <button class="sbtn" onclick="changeStock(${i},-1)">−</button>
+        <input class="sinput${cls}" type="text" inputmode="numeric" id="si-${i}" value="${q}"
+          onclick="this.select()" onblur="commitStock(${i},this.value)"
+          onkeydown="if(event.key==='Enter'){commitStock(${i},this.value);this.blur();}">
+        <button class="sbtn" onclick="changeStock(${i},1)">+</button>
+      </div></div>`;
+  }).join('');
 }
 
 // ── Notifications ──
@@ -866,12 +698,6 @@ function buildImgStrip(txt) {
 }
 
 // ── Render orders ──
-function toggleCancelled() {
-  showCancelled=!showCancelled;
-  document.getElementById('showCancelBtn').textContent=showCancelled?'🗑 ເຊື່ອງຍົກເລີກ':'🗑 ຍົກເລີກ';
-  document.getElementById('showCancelBtn').style.color=showCancelled?'var(--brown)':'var(--red)';
-  render();
-}
 function toggleDone() {
   showDone=!showDone;
   document.getElementById('showDoneBtn').textContent=showDone?'ເຊື່ອງທີ່ສຳເລັດ':'ສະແດງສຳເລັດ';
@@ -880,26 +706,15 @@ function toggleDone() {
 function render() {
   const orders=getOrders();
   const list=document.getElementById('orderList');
-  // ถ้าไม่มี active orders ให้ show done อัตโนมัติ
-  const hasActive = orders.some(o=>!o.done&&!o.cancelled);
-  if (!hasActive && orders.length > 0 && !showDone) {
-    showDone = true;
-    const btn = document.getElementById('showDoneBtn');
-    if (btn) btn.textContent = 'ເຊື່ອງທີ່ສຳເລັດ';
-  }
   if (!orders.length) { list.innerHTML='<div class="empty-msg">ຍັງບໍ່ມີລາຍການ</div>'; updateStats(); return; }
   list.innerHTML=orders.map((o,i)=>{
-    // ซ่อน cancelled ออกเลย ไม่ปนกับรายการปกติ
-    const hide=(o.done&&!showDone)||(o.cancelled&&!showCancelled);
+    const hide=(o.done||o.cancelled)&&!showDone;
     const tag=o.cancelled?`<span class="tag tag-cancelled">✕ ຍົກເລີກ</span>`
       :o.done?`<span class="tag tag-done">✓ ສຳເລັດ</span>`
       :o.called?`<span class="tag tag-called">📢 ຮຽກ</span>`:'';
     let act;
     if (o.cancelled) act=`<button class="abtn abtn-undo" onclick="undoCancel(${i})">↩ ຄືນ</button>`;
     else if (o.done) act=`<button class="abtn abtn-undo" onclick="undoDone(${i})">↩ ຍົກເລີກ Done</button>`;
-    else if (o.type==='online' && o.status==='pending') act=`
-      <button class="abtn" style="background:var(--green);color:var(--cream);flex:3;" onclick="confirmSlip(${o.num})">✅ ຢືນຢັນສລິບ</button>
-      <button class="abtn" style="background:var(--warm-white);color:var(--red);border:2px solid var(--red)!important;flex:2;" onclick="rejectSlip(${o.num})">❌ ປະຕິເສດ</button>`;
     else act=`
       <button class="abtn abtn-one" onclick="oneActionDone(${i})">⚡ Done</button>
       <button class="abtn abtn-call" onclick="callOnly(${i})">📢</button>
@@ -910,15 +725,8 @@ function render() {
       <div class="istrip">${buildImgStrip(o.items)}</div>
       <div class="obody">
         <div class="ohead"><div class="oqnum">ຄິວ ${String(o.num).padStart(3,'0')}</div>
-        <div class="oright"><div class="otime">${o.time}</div>
-        ${o.type==='online'?'<span class="tag" style="background:var(--blue-bg);color:var(--blue);">🌐 ອອນໄລນ໌</span>':''}
-        ${tag}</div></div>
-        ${o.type==='online'&&o.custName?`<div style="font-size:clamp(12px,1.8vw,14px);font-weight:700;color:var(--gray3);margin-bottom:6px;">👤 ${o.custName} · 📞 ${o.custPhone||''}<br>📅 ${o.pickupDate||''} ${o.pickupTime||''}</div>`:''}
+        <div class="oright"><div class="otime">${o.time}</div>${tag}</div></div>
         <div class="oitems">${o.items}</div>
-        ${o.bag?`<div style="font-size:clamp(15px,2.2vw,18px);font-weight:900;color:var(--brown);background:var(--cream2);border-radius:10px;padding:10px 14px;margin-bottom:8px;border-left:4px solid var(--brown3);">🛍 ${o.bag}</div>`:''}
-        ${o.bagNote?`<div style="font-size:15px;font-weight:900;color:var(--brown);background:var(--cream2);border-radius:8px;padding:8px 12px;margin-bottom:8px;border-left:4px solid var(--orange);">📝 ໝາຍເຫດຖົງ: ${o.bagNote}</div>`:''}
-        ${o.note?`<div style="font-size:13px;font-weight:700;color:var(--gray3);background:var(--orange-bg);border-radius:8px;padding:8px 12px;margin-bottom:8px;">📝 ${o.note}</div>`:''}
-        ${o.slipUrl?`<div style="margin-bottom:8px;"><div style="font-size:12px;font-weight:900;color:var(--gray3);margin-bottom:4px;">📎 ສລິບໂອນເງິນ</div><img src="${o.slipUrl}" style="width:100%;max-width:180px;border-radius:10px;border:2px solid var(--cream3);cursor:pointer;" onclick="window.open('${o.slipUrl}','_blank')"></div>`:''}
         ${o.total?`<div class="ototal">ລວມ: ${o.total.toLocaleString()} ກີບ</div>`:''}
         <div class="oactions">${act}</div>
       </div></div>`;
@@ -933,7 +741,7 @@ function oneActionDone(i) {
   undoStack.push({index:i,snapshot:JSON.parse(JSON.stringify(o))});
   if (undoStack.length>20) undoStack.shift();
   o.called=true; o.done=true; saveOrders(orders);
-  announce(o.num); addSale(o); deductStock(o.items, o.type==='online'?'online':'walkin');
+  announce(o.num); addSale(o); deductStock(o.items);
   const qs=JSON.parse(localStorage.getItem('queue_state')||'{"next":1,"serving":0}');
   qs.serving=o.num; localStorage.setItem('queue_state',JSON.stringify(qs));
   if (autoPrint) printOrder(i);
@@ -948,17 +756,12 @@ function callOnly(i) {
 function cancelOrder(i) {
   const orders=getOrders();
   undoStack.push({index:i,snapshot:JSON.parse(JSON.stringify(orders[i]))});
-  // หักเงินออกจากยอดขายเสมอ ไม่ว่าจะ Done หรือยัง
-  remSale(orders[i]);
+  if (orders[i].done) remSale(orders[i]);
   orders[i].cancelled=true; orders[i].done=false; saveOrders(orders);
   toast('ຍົກເລີກ — ກົດ ↩ ຄືນໄດ້','orange'); render();
 }
 function undoCancel(i) {
-  const orders=getOrders();
-  orders[i].cancelled=false;
-  // คืนเงินกลับเข้ายอดขายถ้าออเดอร์นี้เคย Done
-  if (orders[i].done) addSale(orders[i]);
-  saveOrders(orders);
+  const orders=getOrders(); orders[i].cancelled=false; saveOrders(orders);
   toast('↩ ຄືນອໍເດີ','blue'); render();
 }
 function undoDone(i) {
@@ -1067,31 +870,17 @@ function buildMenuSettings() {
   const EMOJIS = ['🥟','🍫','🍵','🧁','🍞','🥐','🍮'];
   document.getElementById('menuSettingsList').innerHTML = menus.map((m, i) => {
     const img = localStorage.getItem('bcb_img_' + i);
-    // FIX: type="text" inputmode="numeric" ป้องกันหน้าจอเลื่อน
-    // FIX: แสดง preview รูปถ้ามี
     return `<div class="menu-set-row">
       <span class="menu-set-num">${i+1}</span>
-      <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;">
-        <input class="menu-set-name" id="msl-${i}" value="${m.lo}" placeholder="ຊື່ເມນູ">
-        <div style="display:flex;gap:4px;align-items:center;">
-          <input class="menu-set-price" id="msp-${i}" type="text" inputmode="numeric" value="${prices[i]||''}" placeholder="0">
-          <span class="menu-set-unit">ກີບ</span>
-        </div>
-      </div>
+      <input class="menu-set-name" id="msl-${i}" value="${m.lo}" placeholder="ຊື່ເມນູ">
+      <input class="menu-set-price" id="msp-${i}" type="number" value="${prices[i]||''}" placeholder="0">
+      <span class="menu-set-unit">ກີບ</span>
       <div class="menu-set-img">
-        <label title="ອັບໂຫລດຮູບ" style="position:relative;">
-          ${img
-            ? `<img src="${img}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--brown3);display:block;">`
-            : `<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px dashed var(--cream3);border-radius:8px;">${EMOJIS[i]||'🍱'}</div>`
-          }
-          <input type="file" accept="image/*" onchange="uploadMenuImg(event,${i})">
-        </label>
-        ${img ? `<button onclick="removeMenuImg(${i})" style="font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;padding:2px;display:block;text-align:center;">✕ ລຶບ</button>` : ''}
+        <label title="ອັບໂຫລດຮູບ">${img ? '🖼' : EMOJIS[i]||'🍱'}<input type="file" accept="image/*" onchange="uploadMenuImg(event,${i})"></label>
       </div>
     </div>`;
   }).join('');
 }
-
 function saveMenuSettings() {
   const sm = localStorage.getItem('bcb_menus');
   const menus = sm ? JSON.parse(sm) : [];
@@ -1105,79 +894,29 @@ function saveMenuSettings() {
   });
   localStorage.setItem('bcb_menus', JSON.stringify(menus));
   localStorage.setItem('bcb_prices', JSON.stringify(prices));
-  localStorage.setItem('bcb_menu_updated', Date.now().toString());
-  // sync ขึ้น Firebase ด้วย
-  if(fbDb){
-    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-      Promise.all([
-        set(ref(fbDb,'settings/menus'),menus),
-        set(ref(fbDb,'settings/prices'),prices),
-      ]).then(()=>toast('ບັນທຶກເມນູ ✅ — sync ຂຶ້ນ Firebase ແລ້ວ','green'))
-        .catch(()=>toast('ບັນທຶກເມນູ ✅','green'));
-    });
-  } else {
-    toast('ບັນທຶກເມນູ ✅','green');
-  }
+  toast('ບັນທຶກເມນູ ✅', 'green');
 }
-
 function uploadMenuImg(e, i) {
   const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
   r.onload = ev => {
     localStorage.setItem('bcb_img_' + i, ev.target.result);
-    // FIX: trigger ให้ index.html รู้
-    localStorage.setItem('bcb_menu_updated', Date.now().toString());
     buildMenuSettings();
     toast('ອັບໂຫລດຮູບ ✅', 'green');
   };
   r.readAsDataURL(f);
 }
 
-function removeMenuImg(i) {
-  localStorage.removeItem('bcb_img_' + i);
-  localStorage.setItem('bcb_menu_updated', Date.now().toString());
-  buildMenuSettings();
-  toast('ລຶບຮູບແລ້ວ', 'orange');
-}
-
 // ── QR Admin ──
 function uploadQRAdmin(e){
   const f=e.target.files[0];if(!f)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    // บีบอัดรูป QR ก่อนบันทึก
-    const img=new Image();
-    img.onload=()=>{
-      const canvas=document.createElement('canvas');
-      const MAX=800;
-      let w=img.width,h=img.height;
-      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
-      canvas.width=w;canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      const data=canvas.toDataURL('image/jpeg',0.7);
-      localStorage.setItem('bcb_qr',data);
-      renderQRAdmin();
-      // sync ขึ้น Firebase ด้วย
-      if(fbDb){
-        import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-          set(ref(fbDb,'settings/qr'),data).then(()=>toast('ອັບໂຫລດ QR ✅ — sync ແລ້ວ','green')).catch(()=>toast('ອັບໂຫລດ QR ✅','green'));
-        });
-      } else { toast('ອັບໂຫລດ QR ✅','green'); }
-    };
-    img.src=ev.target.result;
-  };
-  reader.readAsDataURL(f);
+  const r=new FileReader();
+  r.onload=ev=>{localStorage.setItem('bcb_qr',ev.target.result);renderQRAdmin();toast('ອັບໂຫລດ QR ✅','green');};
+  r.readAsDataURL(f);
 }
 function removeQR(){
   if(!confirm('ລຶບ QR Code?'))return;
-  localStorage.removeItem('bcb_qr');
-  renderQRAdmin();
-  if(fbDb){
-    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,remove})=>{
-      remove(ref(fbDb,'settings/qr')).catch(()=>{});
-    });
-  }
-  toast('ລຶບ QR ແລ້ວ');
+  localStorage.removeItem('bcb_qr');renderQRAdmin();toast('ລຶບ QR ແລ້ວ');
 }
 function renderQRAdmin(){
   const d=localStorage.getItem('bcb_qr');
@@ -1309,108 +1048,59 @@ function buildReceiptHTML(qnum,items,total,time){
 function updatePreview(){
   document.getElementById('receiptPreview').innerHTML=buildReceiptHTML(7,'ຊາລາເປົາໝູສັບ x2 = 40,000 ກີບ\nໝັນໂຖ Matcha x1 = 15,000 ກີບ',55000,'14:30');
 }
-function printTest(){alert('ຕົວຢ່າງໃບບິນ — ກົດ "ເຊື່ອມ" ແລ້ວກົດ 🖨 ທີ່ອໍເດີ');}
+function printTest(){alert('ຕົວຢ່າງໃບເສດ — ກົດ "ເຊື່ອມ" ແລ້ວກົດ 🖨 ທີ່ອໍເດີ');}
+
+// ── Shop Open/Close ──
+function getShopOpen() { return localStorage.getItem('bcb_shop') !== 'closed'; }
+function toggleShop() {
+  const isOpen = getShopOpen();
+  const newOpen = !isOpen;
+  localStorage.setItem('bcb_shop', newOpen ? 'open' : 'closed');
+  updateShopBtn(newOpen);
+  toast(newOpen ? '🟢 ເປີດຮ້ານແລ້ວ' : '🔴 ປິດຮ້ານແລ້ວ', newOpen ? 'green' : 'red');
+  // sync Firebase
+  if(window.fbDb) {
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      set(ref(window.fbDb,'settings/shopOpen'), newOpen).catch(()=>{});
+    });
+  }
+}
+function updateShopBtn(isOpen) {
+  const btn = document.getElementById('shopBtn');
+  if(!btn) return;
+  if(isOpen) {
+    btn.textContent = '🟢 ເປີດ';
+    btn.style.borderColor = '#86efac';
+    btn.style.color = '#86efac';
+  } else {
+    btn.textContent = '🔴 ປິດ';
+    btn.style.borderColor = '#fca5a5';
+    btn.style.color = '#fca5a5';
+  }
+}
+
+// ── Save Stock ──
+function saveStockNow() {
+  const st = getStock();
+  saveStock(st);
+  if(window.fbDb) {
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      set(ref(window.fbDb,'stock/online'), st).catch(()=>{});
+    });
+  }
+  toast('💾 ບັນທຶກສຕ໋ອກ ✅','green');
+}
 
 // ── Init ──
+checkLogin();
 loadSettings();
 renderStock();
 renderQRAdmin();
 buildMenuSettings();
 render();
-renderShopStatus();
+updateShopBtn(getShopOpen());
 window.addEventListener('storage',()=>{render();checkNotif();renderStock();});
 setInterval(()=>{render();checkNotif();},2000);
-
-// ══ FIREBASE — Online Orders ══
-// ⚠️ ใส่ config เดียวกับ order.html
-const FB_CONFIG = {
-  apiKey: "AIzaSyBttrWZXEeC-_zgiHftpHTspqlJL_CeSgQ",
-  authDomain: "basic-chinese-bun.firebaseapp.com",
-  databaseURL: "https://basic-chinese-bun-default-rtdb.firebaseio.com",
-  projectId: "basic-chinese-bun",
-  storageBucket: "basic-chinese-bun.firebasestorage.app",
-  messagingSenderId: "893711620048",
-  appId: "1:893711620048:web:3fcfa7aa5f808d25bd8bd5"
-};
-
-let fbApp=null, fbDb=null;
-async function initFirebase(){
-  if(fbDb) return;
-  try{
-    const {initializeApp}=await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-    const {getDatabase,ref,onValue,update}=await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-    fbApp=initializeApp(FB_CONFIG,'staff');
-    fbDb=getDatabase(fbApp);
-    // Listen online orders realtime
-    onValue(ref(fbDb,'orders'),(snap)=>{
-      if(!snap.exists()) return;
-      const fbOrders=Object.values(snap.val()).filter(o=>o.type==='online');
-      mergeOnlineOrders(fbOrders);
-    });
-    // Sync settings to Firebase
-    syncSettingsToFirebase(getDatabase, ref, fbDb);
-    toast('☁ ເຊື່ອມ Firebase ✅','green');
-  }catch(e){ toast('Firebase: '+e.message,'orange'); }
-}
-
-function mergeOnlineOrders(fbOrders){
-  // merge online orders into render
-  const localOrders=getOrders();
-  const onlineNums=new Set(fbOrders.map(o=>o.num));
-  // remove old online orders from local
-  const filtered=localOrders.filter(o=>o.type!=='online'||onlineNums.has(o.num));
-  // add/update from Firebase
-  fbOrders.forEach(fo=>{
-    const idx=filtered.findIndex(o=>o.num===fo.num&&o.type==='online');
-    if(idx>=0) filtered[idx]={...filtered[idx],...fo};
-    else filtered.push(fo);
-  });
-  filtered.sort((a,b)=>b.num-a.num);
-  saveOrders(filtered);
-  render();
-}
-
-async function confirmSlip(num){
-  if(!fbDb){toast('ຍັງບໍ່ໄດ້ເຊື່ອມ Firebase','orange');return;}
-  const {ref,update}=await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-  await update(ref(fbDb,`orders/${num}`),{status:'confirmed'});
-  const orders=getOrders();
-  const idx=orders.findIndex(o=>o.num===num);
-  if(idx>=0){orders[idx].status='confirmed';saveOrders(orders);}
-  toast(`✅ ຢືນຢັນສລິບ ຄິວ ${String(num).padStart(3,'0')}`, 'green');
-  render();
-}
-
-async function rejectSlip(num){
-  if(!fbDb){toast('ຍັງບໍ່ໄດ້ເຊື່ອມ Firebase','orange');return;}
-  const {ref,update}=await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-  await update(ref(fbDb,`orders/${num}`),{status:'rejected',cancelled:true});
-  const orders=getOrders();
-  const idx=orders.findIndex(o=>o.num===num);
-  if(idx>=0){orders[idx].status='rejected';orders[idx].cancelled=true;saveOrders(orders);}
-  toast(`❌ ປະຕິເສດ ຄິວ ${String(num).padStart(3,'0')}`,'red');
-  render();
-}
-
-// Sync menus/prices/QR to Firebase so order.html loads them
-async function syncSettingsToFirebase(getDatabase,ref,db){
-  try{
-    const {set}=await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-    const menus=localStorage.getItem('bcb_menus');
-    const prices=localStorage.getItem('bcb_prices');
-    const qr=localStorage.getItem('bcb_qr');
-    const stockOnline=localStorage.getItem('bcb_stock_online');
-    const stockWalkin=localStorage.getItem('bcb_stock_walkin');
-    if(menus) await set(ref(db,'settings/menus'),JSON.parse(menus));
-    if(prices) await set(ref(db,'settings/prices'),JSON.parse(prices));
-    if(qr) await set(ref(db,'settings/qr'),qr);
-    if(stockOnline) await set(ref(db,'stock/online'),JSON.parse(stockOnline));
-    if(stockWalkin) await set(ref(db,'stock/walkin'),JSON.parse(stockWalkin));
-  }catch(e){}
-}
-
-// Auto init Firebase on load
-initFirebase();
 </script>
 </body>
 </html>
