@@ -74,7 +74,7 @@ button{font-family:'Noto Sans Lao',sans-serif;cursor:pointer;}
 ══════════════════════════════════ */
 .layout{display:grid;grid-template-columns:1fr;max-width:1200px;margin:0 auto;}
 @media(min-width:768px){
-  .layout{display:grid!important;grid-template-columns:300px 1fr!important;align-items:start;}
+  .layout{grid-template-columns:300px 1fr;align-items:start;}
   .sidebar{position:sticky;top:49px;max-height:calc(100vh - 49px);overflow-y:auto;}
 }
 .sidebar{padding:12px 12px 0;display:flex;flex-direction:column;gap:10px;}
@@ -334,17 +334,14 @@ input[type=file]{display:none;}
         <div class="card-title" onclick="toggleCard('menuCard')">🍱 ເມນູ & ລາຄາ</div>
         <div class="card-body">
           <div id="menuSettingsList"></div>
-          <button onclick="saveMenuSettings()" style="width:100%;margin-top:10px;padding:14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">💾 ບັນທຶກເມນູ & ລາຄາ</button>
+          <button onclick="saveMenuSettings()" style="width:100%;margin-top:10px;padding:12px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">💾 ບັນທຶກ</button>
         </div>
       </div>
 
       <!-- Stock (collapsible) -->
       <div class="card card-collapsible collapsed" id="stockCard">
         <div class="card-title" onclick="toggleCard('stockCard')">📦 ສຕ໋ອກ / Stock</div>
-        <div class="card-body">
-          <div id="stockList"></div>
-          <button onclick="saveStockNow()" style="width:100%;margin-top:10px;padding:14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">💾 ບັນທຶກສຕ໋ອກ</button>
-        </div>
+        <div class="card-body"><div id="stockList"></div><button onclick="saveStockNow()" style="width:100%;margin-top:10px;padding:14px;background:var(--brown);color:var(--cream);border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:Noto Sans Lao,sans-serif;">💾 ບັນທຶກສຕ໋ອກ</button></div>
       </div>
 
       <!-- QR (collapsible) -->
@@ -355,7 +352,7 @@ input[type=file]{display:none;}
             <img id="qrPreviewImg" src="" style="width:100%;max-width:200px;border-radius:10px;border:2px solid #000;">
           </div>
           <div id="qrEmptyMsg" style="text-align:center;font-size:13px;color:#bbb;font-weight:700;padding:8px 0 10px;">ຍັງບໍ່ໄດ້ອັບໂຫລດ QR</div>
-          <label style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#000;color:#fff;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">
+          <label style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--brown);color:var(--cream);border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">
             📤 ອັບໂຫລດ QR<input type="file" accept="image/*" onchange="uploadQRAdmin(event)">
           </label>
           <button onclick="removeQR()" id="qrRemoveBtn" style="display:none;width:100%;margin-top:8px;padding:10px;background:#fff;color:#c00;border:2px solid #c00;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;">✕ ລຶບ QR</button>
@@ -898,30 +895,13 @@ function saveMenuSettings() {
 }
 function uploadMenuImg(e, i) {
   const f = e.target.files[0]; if (!f) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const MAX = 400;
-      let w = img.width, h = img.height;
-      if(w > MAX){ h = Math.round(h*MAX/w); w = MAX; }
-      if(h > MAX){ w = Math.round(w*MAX/h); h = MAX; }
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      const data = canvas.toDataURL('image/jpeg', 0.7);
-      localStorage.setItem('bcb_img_' + i, data);
-      buildMenuSettings();
-      // sync ขึ้น Firebase
-      if(window.fbDb) {
-        import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-          set(ref(window.fbDb, 'settings/img_' + i), data).then(()=>toast('ອັບໂຫລດຮູບ ✅ sync ແລ້ວ','green')).catch(()=>toast('ອັບໂຫລດຮູບ ✅','green'));
-        });
-      } else { toast('ອັບໂຫລດຮູບ ✅','green'); }
-    };
-    img.src = ev.target.result;
+  const r = new FileReader();
+  r.onload = ev => {
+    localStorage.setItem('bcb_img_' + i, ev.target.result);
+    buildMenuSettings();
+    toast('ອັບໂຫລດຮູບ ✅', 'green');
   };
-  reader.readAsDataURL(f);
+  r.readAsDataURL(f);
 }
 
 // ── QR Admin ──
@@ -1067,47 +1047,6 @@ function updatePreview(){
 }
 function printTest(){alert('ຕົວຢ່າງໃບເສດ — ກົດ "ເຊື່ອມ" ແລ້ວກົດ 🖨 ທີ່ອໍເດີ');}
 
-// ── Shop Open/Close ──
-function getShopOpen() { return localStorage.getItem('bcb_shop') !== 'closed'; }
-function toggleShop() {
-  const isOpen = getShopOpen();
-  const newOpen = !isOpen;
-  localStorage.setItem('bcb_shop', newOpen ? 'open' : 'closed');
-  updateShopBtn(newOpen);
-  toast(newOpen ? '🟢 ເປີດຮ້ານແລ້ວ' : '🔴 ປິດຮ້ານແລ້ວ', newOpen ? 'green' : 'red');
-  // sync Firebase — ใช้ path เดียวกับที่ order.html อ่าน
-  if(window.fbDb) {
-    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-      set(ref(window.fbDb,'shop'), {open: newOpen}).catch(()=>{});
-    });
-  }
-}
-function updateShopBtn(isOpen) {
-  const btn = document.getElementById('shopBtn');
-  if(!btn) return;
-  if(isOpen) {
-    btn.textContent = '🟢 ເປີດ';
-    btn.style.borderColor = '#86efac';
-    btn.style.color = '#86efac';
-  } else {
-    btn.textContent = '🔴 ປິດ';
-    btn.style.borderColor = '#fca5a5';
-    btn.style.color = '#fca5a5';
-  }
-}
-
-// ── Save Stock ──
-function saveStockNow() {
-  const st = getStock();
-  saveStock(st);
-  if(window.fbDb) {
-    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
-      set(ref(window.fbDb,'stock/online'), st).catch(()=>{});
-    });
-  }
-  toast('💾 ບັນທຶກສຕ໋ອກ ✅','green');
-}
-
 // ── Init ──
 checkLogin();
 loadSettings();
@@ -1115,9 +1054,98 @@ renderStock();
 renderQRAdmin();
 buildMenuSettings();
 render();
-updateShopBtn(getShopOpen());
 window.addEventListener('storage',()=>{render();checkNotif();renderStock();});
 setInterval(()=>{render();checkNotif();},2000);
+
+// ── Shop Open/Close ──
+function getShopOpen(){ return localStorage.getItem('bcb_shop') !== 'closed'; }
+function toggleShop(){
+  const newOpen = !getShopOpen();
+  localStorage.setItem('bcb_shop', newOpen ? 'open' : 'closed');
+  _updateShopBtn(newOpen);
+  toast(newOpen ? '🟢 ເປີດຮ້ານແລ້ວ' : '🔴 ປິດຮ້ານແລ້ວ', newOpen ? 'green' : 'red');
+  if(window._fbDb){
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      set(ref(window._fbDb,'shop'),{open:newOpen}).catch(()=>{});
+    });
+  }
+}
+function _updateShopBtn(isOpen){
+  const btn=document.getElementById('shopBtn'); if(!btn) return;
+  btn.textContent = isOpen ? '🟢 ເປີດ' : '🔴 ປິດ';
+  btn.style.borderColor = isOpen ? '#86efac' : '#fca5a5';
+  btn.style.color = isOpen ? '#86efac' : '#fca5a5';
+}
+_updateShopBtn(getShopOpen());
+
+// ── Save Stock to Firebase ──
+function saveStockNow(){
+  const st = getStock();
+  saveStock(st);
+  if(window._fbDb){
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      set(ref(window._fbDb,'stock/online'), st).catch(()=>{});
+    });
+  }
+  toast('💾 ບັນທຶກສຕ໋ອກ ✅','green');
+}
+
+// ── Firebase Init ──
+(async()=>{
+  try{
+    const {initializeApp} = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+    const {getDatabase,ref,onValue,update,set} = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+    const fbApp = initializeApp({
+      apiKey:"AIzaSyBttrWZXEeC-_zgiHftpHTspqlJL_CeSgQ",
+      authDomain:"basic-chinese-bun.firebaseapp.com",
+      databaseURL:"https://basic-chinese-bun-default-rtdb.firebaseio.com",
+      projectId:"basic-chinese-bun",
+      storageBucket:"basic-chinese-bun.firebasestorage.app",
+      messagingSenderId:"893711620048",
+      appId:"1:893711620048:web:3fcfa7aa5f808d25bd8bd5"
+    },'staff-v2');
+    window._fbDb = getDatabase(fbApp);
+
+    // sync เมนู ราคา QR สต็อกขึ้น Firebase
+    const mn=localStorage.getItem('bcb_menus');
+    const pr=localStorage.getItem('bcb_prices');
+    const qr=localStorage.getItem('bcb_qr');
+    const st=localStorage.getItem('bcb_stock');
+    if(mn) set(ref(window._fbDb,'settings/menus'),JSON.parse(mn)).catch(()=>{});
+    if(pr) set(ref(window._fbDb,'settings/prices'),JSON.parse(pr)).catch(()=>{});
+    if(qr) set(ref(window._fbDb,'settings/qr'),qr).catch(()=>{});
+    if(st) set(ref(window._fbDb,'stock/online'),JSON.parse(st)).catch(()=>{});
+
+    // sync สถานะร้านปัจจุบัน
+    set(ref(window._fbDb,'shop'),{open:getShopOpen()}).catch(()=>{});
+
+    // listen online orders realtime
+    onValue(ref(window._fbDb,'orders'), snap=>{
+      if(!snap.exists()) return;
+      const fbOrders = Object.values(snap.val()).filter(o=>o.type==='online');
+      const local = getOrders().filter(o=>o.type!=='online');
+      const merged = [...local, ...fbOrders].sort((a,b)=>b.num-a.num);
+      saveOrders(merged);
+      render(); checkNotif();
+    });
+
+    toast('☁ Firebase ✅','green',2000);
+  }catch(e){ console.error('Firebase:', e); }
+})();
+
+// Override saveMenuSettings to sync Firebase
+const _origSaveMenu = saveMenuSettings;
+window.saveMenuSettings = function(){
+  _origSaveMenu();
+  if(window._fbDb){
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      const mn=localStorage.getItem('bcb_menus');
+      const pr=localStorage.getItem('bcb_prices');
+      if(mn) set(ref(window._fbDb,'settings/menus'),JSON.parse(mn)).catch(()=>{});
+      if(pr) set(ref(window._fbDb,'settings/prices'),JSON.parse(pr)).catch(()=>{});
+    });
+  }
+};
 </script>
 </body>
 </html>
