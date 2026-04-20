@@ -433,8 +433,16 @@ function getOnlineStock() {
   return new Promise(async (resolve) => {
     try {
       const snap = await get(ref(db, 'stock/online'));
-      resolve(snap.exists() ? Object.values(snap.val()) : new Array(menus.length).fill(99));
-    } catch { resolve(new Array(menus.length).fill(99)); }
+      if (snap.exists()) {
+        const val = snap.val();
+        // Firebase เก็บเป็น object หรือ array
+        const arr = Array.isArray(val) ? val : Object.values(val);
+        resolve(arr);
+      } else {
+        // ถ้า Firebase ยังไม่มีข้อมูล ให้ถือว่าสต็อก 0 ทุกตัว (ต้องตั้งก่อน)
+        resolve(new Array(menus.length).fill(0));
+      }
+    } catch { resolve(new Array(menus.length).fill(0)); }
   });
 }
 

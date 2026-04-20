@@ -593,6 +593,12 @@ function getStock(type='total') {
 function saveStock(s, type='total') {
   const key = type==='total'?'bcb_stock':type==='walkin'?'bcb_stock_walkin':'bcb_stock_online';
   localStorage.setItem(key, JSON.stringify(s));
+  // sync สต็อกออนไลน์ขึ้น Firebase ด้วย
+  if (type === 'online' && fbDb) {
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref, set}) => {
+      set(ref(fbDb, 'stock/online'), s).catch(()=>{});
+    });
+  }
 }
 function switchStockTab(tab) {
   currentStockTab = tab;
@@ -784,7 +790,8 @@ function render() {
   }
   if (!orders.length) { list.innerHTML='<div class="empty-msg">ຍັງບໍ່ມີລາຍການ</div>'; updateStats(); return; }
   list.innerHTML=orders.map((o,i)=>{
-    const hide=(o.done||o.cancelled)&&!showDone;
+    // ซ่อน cancelled ออกเลย ไม่ปนกับรายการปกติ
+    const hide=(o.done&&!showDone)||(o.cancelled&&!showDone);
     const tag=o.cancelled?`<span class="tag tag-cancelled">✕ ຍົກເລີກ</span>`
       :o.done?`<span class="tag tag-done">✓ ສຳເລັດ</span>`
       :o.called?`<span class="tag tag-called">📢 ຮຽກ</span>`:'';
