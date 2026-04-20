@@ -1015,9 +1015,19 @@ function saveMenuSettings() {
   });
   localStorage.setItem('bcb_menus', JSON.stringify(menus));
   localStorage.setItem('bcb_prices', JSON.stringify(prices));
-  // FIX: trigger storage event ให้ index.html รู้ว่าข้อมูลเปลี่ยน
   localStorage.setItem('bcb_menu_updated', Date.now().toString());
-  toast('ບັນທຶກເມນູ ✅ — index.html ຈະອັບເດດອັດຕະໂນມັດ', 'green');
+  // sync ขึ้น Firebase ด้วย
+  if(fbDb){
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+      Promise.all([
+        set(ref(fbDb,'settings/menus'),menus),
+        set(ref(fbDb,'settings/prices'),prices),
+      ]).then(()=>toast('ບັນທຶກເມນູ ✅ — sync ຂຶ້ນ Firebase ແລ້ວ','green'))
+        .catch(()=>toast('ບັນທຶກເມນູ ✅','green'));
+    });
+  } else {
+    toast('ບັນທຶກເມນູ ✅','green');
+  }
 }
 
 function uploadMenuImg(e, i) {
@@ -1043,13 +1053,41 @@ function removeMenuImg(i) {
 // ── QR Admin ──
 function uploadQRAdmin(e){
   const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{localStorage.setItem('bcb_qr',ev.target.result);renderQRAdmin();toast('ອັບໂຫລດ QR ✅','green');};
-  r.readAsDataURL(f);
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    // บีบอัดรูป QR ก่อนบันทึก
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const MAX=800;
+      let w=img.width,h=img.height;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const data=canvas.toDataURL('image/jpeg',0.7);
+      localStorage.setItem('bcb_qr',data);
+      renderQRAdmin();
+      // sync ขึ้น Firebase ด้วย
+      if(fbDb){
+        import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,set})=>{
+          set(ref(fbDb,'settings/qr'),data).then(()=>toast('ອັບໂຫລດ QR ✅ — sync ແລ້ວ','green')).catch(()=>toast('ອັບໂຫລດ QR ✅','green'));
+        });
+      } else { toast('ອັບໂຫລດ QR ✅','green'); }
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
 }
 function removeQR(){
   if(!confirm('ລຶບ QR Code?'))return;
-  localStorage.removeItem('bcb_qr');renderQRAdmin();toast('ລຶບ QR ແລ້ວ');
+  localStorage.removeItem('bcb_qr');
+  renderQRAdmin();
+  if(fbDb){
+    import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ref,remove})=>{
+      remove(ref(fbDb,'settings/qr')).catch(()=>{});
+    });
+  }
+  toast('ລຶບ QR ແລ້ວ');
 }
 function renderQRAdmin(){
   const d=localStorage.getItem('bcb_qr');
@@ -1270,9 +1308,13 @@ async function syncSettingsToFirebase(getDatabase,ref,db){
     const menus=localStorage.getItem('bcb_menus');
     const prices=localStorage.getItem('bcb_prices');
     const qr=localStorage.getItem('bcb_qr');
+    const stockOnline=localStorage.getItem('bcb_stock_online');
+    const stockWalkin=localStorage.getItem('bcb_stock_walkin');
     if(menus) await set(ref(db,'settings/menus'),JSON.parse(menus));
     if(prices) await set(ref(db,'settings/prices'),JSON.parse(prices));
     if(qr) await set(ref(db,'settings/qr'),qr);
+    if(stockOnline) await set(ref(db,'stock/online'),JSON.parse(stockOnline));
+    if(stockWalkin) await set(ref(db,'stock/walkin'),JSON.parse(stockWalkin));
   }catch(e){}
 }
 
