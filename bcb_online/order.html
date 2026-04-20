@@ -333,8 +333,7 @@ input[type=file]{display:none;}
 // FIREBASE CONFIG — ใส่ config ของคุณตรงนี้
 // ══════════════════════════════════════
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getDatabase, ref, push, set, get, onValue, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-import { getStorage, ref as sref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+import { getDatabase, ref, push, set, get, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBttrWZXEeC-_zgiHftpHTspqlJL_CeSgQ",
@@ -348,7 +347,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const storage = getStorage(app);
 
 // ══════════════════════════════════════
 // STATE
@@ -550,18 +548,30 @@ function goToQR() {
 function uploadSlip(e) {
   const f=e.target.files[0]; if(!f) return;
   slipFile=f;
-  const r=new FileReader();
-  r.onload=ev=>{
-    slipDataUrl=ev.target.result;
-    document.getElementById('slipBox').classList.add('has-slip');
-    document.getElementById('slipIcon').textContent='✅';
-    document.getElementById('slipText').textContent='ສລິບພ້ອມແລ້ວ · ກົດເພື່ອປ່ຽນ';
-    document.getElementById('slipPreview').src=slipDataUrl;
-    document.getElementById('slipPreview').style.display='block';
-    document.getElementById('submitBtn').disabled=false;
-    toast('ອັປໂຫລດສລິບ ✅','green');
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    // บีบอัดรูปก่อนเก็บใน Firebase เพื่อลดขนาด
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const MAX=600;
+      let w=img.width,h=img.height;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      slipDataUrl=canvas.toDataURL('image/jpeg',0.55);
+      document.getElementById('slipBox').classList.add('has-slip');
+      document.getElementById('slipIcon').textContent='✅';
+      document.getElementById('slipText').textContent='ສລິບພ້ອມແລ້ວ · ກົດເພື່ອປ່ຽນ';
+      document.getElementById('slipPreview').src=slipDataUrl;
+      document.getElementById('slipPreview').style.display='block';
+      document.getElementById('submitBtn').disabled=false;
+      toast('ອັປໂຫລດສລິບ ✅','green');
+    };
+    img.src=ev.target.result;
   };
-  r.readAsDataURL(f);
+  reader.readAsDataURL(f);
 }
 
 // ══════════════════════════════════════
@@ -572,7 +582,7 @@ async function submitOrder() {
   btn.disabled=true; btn.textContent='⏳ ກຳລັງສົ່ງ...';
 
   // timeout 15 วินาที ถ้า Firebase ไม่ตอบ
-  const timeout = new Promise((_,reject) => setTimeout(()=>reject(new Error('ໝົດເວລາ — ກວດສອບອິນເຕີເນັດ')), 15000));
+  const timeout = new Promise((_,reject) => setTimeout(()=>reject(new Error('ໝົດເວລາ — ກວດສອບອິນເຕີເນັດ')), 30000));
 
   try {
     await Promise.race([_doSubmit(), timeout]);
@@ -593,15 +603,8 @@ async function _doSubmit() {
   let lines=''; let total=0;
   selected.forEach((s,i)=>{ if(!s) return; const qty=quantities[i]; const sub=prices[i]*qty; total+=sub; lines+=`${menus[i].lo} x${qty}${prices[i]?' = '+sub.toLocaleString()+' ກີບ':''}\n`; });
 
-  // Upload slip — ใช้ base64 ถ้า Storage ไม่พร้อม
+  // ใช้ base64 เก็บใน Realtime Database โดยตรง ไม่ต้องใช้ Storage
   let slipUrl = slipDataUrl || '';
-  if(slipFile){
-    try{
-      const slipRef=sref(storage,`slips/${Date.now()}_${myNum}.jpg`);
-      await uploadBytes(slipRef,slipFile);
-      slipUrl=await getDownloadURL(slipRef);
-    }catch(e){ slipUrl=slipDataUrl||''; }
-  }
 
   const now=new Date().toLocaleTimeString('lo-LA',{hour:'2-digit',minute:'2-digit'});
   const bagNote=document.getElementById('bagNote')?.value?.trim()||'';
