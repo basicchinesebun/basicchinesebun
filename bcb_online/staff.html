@@ -28,6 +28,8 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 /* ── Pages ── */
 .page{display:none;}
 .page.active{display:block;}
+.page.active .layout{display:grid;}
+@media(max-width:767px){.page.active .layout{display:flex!important;flex-direction:column!important;}}
 /* ป้องกัน display:block ทับ grid ของ layout */
 .page.active .layout{display:grid;}
 @media(max-width:767px){
@@ -374,15 +376,6 @@ input[type=file]{display:none;}
         </div>
       </div>
 
-      <div class="modal-bg" id="distributeModal">
-        <div class="modal" style="max-width:400px;">
-          <div class="modal-title">⚖️ ແຈກຈ່າຍສຕ໋ອກ</div>
-          <div class="modal-sub">ກຳນົດຈຳນວນໃຫ້ແຕ່ລະຊ່ອງທາງ</div>
-          <div id="distributeList" style="max-height:50vh;overflow-y:auto;margin-bottom:14px;"></div>
-          <button class="mbtn black" onclick="applyDistribute()">✅ ຢືນຢັນ</button>
-          <button class="mbtn outline" onclick="hideModal('distributeModal')">ຍົກເລີກ</button>
-        </div>
-      </div>
 
       <!-- QR (collapsible) -->
       <div class="card card-collapsible collapsed" id="qrCard">
@@ -1487,5 +1480,16 @@ async function syncSettingsToFirebase(getDatabase,ref,db){
 // Auto init Firebase on load
 initFirebase();
 </script>
+
+<!-- Distribute Modal -->
+<div class="modal-bg" id="distributeModal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-title">⚖️ ແຈກຈ່າຍສຕ໋ອກ</div>
+    <div class="modal-sub">ກຳນົດຈຳນວນໃຫ້ແຕ່ລະຊ່ອງທາງ</div>
+    <div id="distributeList" style="max-height:50vh;overflow-y:auto;margin-bottom:14px;"></div>
+    <button class="mbtn black" onclick="applyDistribute()">✅ ຢືນຢັນ</button>
+    <button class="mbtn outline" onclick="hideModal('distributeModal')">ຍົກເລີກ</button>
+  </div>
+</div>
 </body>
 </html>
