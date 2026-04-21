@@ -91,6 +91,9 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 /* เมนู card ให้ scroll ได้ภายใน */
 #menuCard .card-body{overflow-y:auto;max-height:60vh;-webkit-overflow-scrolling:touch;}
 #stockCard .card-body{overflow-y:auto;max-height:60vh;-webkit-overflow-scrolling:touch;}
+/* พับได้ถูกต้อง */
+#menuCard.collapsed .card-body{max-height:0!important;overflow:hidden!important;}
+#stockCard.collapsed .card-body{max-height:0!important;overflow:hidden!important;}
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .stat{background:var(--warm-white);border:1.5px solid var(--cream3);border-radius:var(--radius-sm);padding:10px 6px;text-align:center;}
