@@ -1107,14 +1107,30 @@ function saveStockNow(){
     window._fbDb = getDatabase(fbApp);
 
     // sync เมนู ราคา QR สต็อกขึ้น Firebase
-    const mn=localStorage.getItem('bcb_menus');
-    const pr=localStorage.getItem('bcb_prices');
-    const qr=localStorage.getItem('bcb_qr');
-    const st=localStorage.getItem('bcb_stock');
-    if(mn) set(ref(window._fbDb,'settings/menus'),JSON.parse(mn)).catch(()=>{});
-    if(pr) set(ref(window._fbDb,'settings/prices'),JSON.parse(pr)).catch(()=>{});
-    if(qr) set(ref(window._fbDb,'settings/qr'),qr).catch(()=>{});
-    if(st) set(ref(window._fbDb,'stock/online'),JSON.parse(st)).catch(()=>{});
+    const DEFAULT_MENUS = [
+      {lo:'ຊາລາເປົາໝູສັບ',en:'Pork Steamed Bun'},
+      {lo:'ໝັນໂຖ Dark Chocolate',en:'Dark Choc Mantou'},
+      {lo:'ໝັນໂຖ Matcha',en:'Matcha Mantou'},
+      {lo:'ເມນູ 4',en:'Menu 4'},
+      {lo:'ເມນູ 5',en:'Menu 5'},
+      {lo:'ເມນູ 6',en:'Menu 6'},
+      {lo:'ເມນູ 7',en:'Menu 7'},
+    ];
+    const mn = JSON.parse(localStorage.getItem('bcb_menus') || 'null') || DEFAULT_MENUS;
+    const pr = JSON.parse(localStorage.getItem('bcb_prices') || 'null') || new Array(mn.length).fill(0);
+    const qr = localStorage.getItem('bcb_qr');
+    const st = localStorage.getItem('bcb_stock');
+
+    // บันทึกเมนู default ลง localStorage ด้วยถ้ายังไม่มี
+    if(!localStorage.getItem('bcb_menus')) localStorage.setItem('bcb_menus', JSON.stringify(DEFAULT_MENUS));
+    if(!localStorage.getItem('bcb_prices')) localStorage.setItem('bcb_prices', JSON.stringify(pr));
+
+    // sync ทุกอย่างขึ้น Firebase เสมอ
+    await set(ref(window._fbDb,'settings/menus'), mn);
+    await set(ref(window._fbDb,'settings/prices'), pr);
+    if(qr) set(ref(window._fbDb,'settings/qr'), qr).catch(()=>{});
+    if(st) set(ref(window._fbDb,'stock/online'), JSON.parse(st)).catch(()=>{});
+    else set(ref(window._fbDb,'stock/online'), new Array(mn.length).fill(99)).catch(()=>{});
 
     // sync สถานะร้านปัจจุบัน
     set(ref(window._fbDb,'shop'),{open:getShopOpen()}).catch(()=>{});
