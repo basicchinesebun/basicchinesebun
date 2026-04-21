@@ -70,7 +70,7 @@ button{font-family:'Noto Sans Lao',sans-serif;word-break:break-word;cursor:point
 /* iPad/Tablet — two column side by side */
 @media(min-width:768px){
   .layout{display:grid!important;grid-template-columns:320px 1fr!important;align-items:start;}
-  .sidebar{position:sticky;top:57px;max-height:calc(100vh - 57px);overflow-y:auto;padding:12px 12px 0;}
+  .sidebar{position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;overflow-x:hidden;padding:12px 12px 80px;-webkit-overflow-scrolling:touch;}
   .main-col{min-height:calc(100vh - 80px);}
 }
 
@@ -295,10 +295,13 @@ input[type=file]{display:none;}
         <div class="stat"><div class="stat-num" id="sAll">0</div><div class="stat-lbl">ທັງໝົດ</div></div>
       </div>
 
-      <!-- ปุ่มเปิด/ปิดร้าน -->
-      <div id="shopStatusCard" style="border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(61,31,10,0.1);">
-        <button id="shopToggleBtn" onclick="toggleShop()" style="width:100%;padding:16px;font-size:18px;font-weight:900;border:none;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;border-radius:14px;">
-          🔴 ຮ້ານປິດ — ກົດເພື່ອເປີດ
+      <!-- ปุ่มเปิด/ปิดร้าน แยก Walk-in / Online -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button id="shopToggleBtn" onclick="toggleShop()" style="width:100%;padding:14px;font-size:16px;font-weight:900;border:none;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;border-radius:14px;background:var(--red-bg);color:var(--red);border:2px solid var(--red);">
+          🔴 Walk-in: ປິດ
+        </button>
+        <button id="onlineToggleBtn" onclick="toggleOnlineShop()" style="width:100%;padding:14px;font-size:16px;font-weight:900;border:none;cursor:pointer;font-family:'Noto Sans Lao',sans-serif;border-radius:14px;background:var(--red-bg);color:var(--red);border:2px solid var(--red);">
+          🔴 Online: ປິດ
         </button>
       </div>
 
@@ -571,22 +574,38 @@ function toggleShop() {
 }
 function renderShopStatus() {
   const s = getShopStatus();
-  // อัปเดตปุ่มใน sidebar
+  const onlineOpen = localStorage.getItem('bcb_online_open') === '1';
+  // walk-in button
   const btn = document.getElementById('shopToggleBtn');
   if(btn) {
     if(s.open) {
-      btn.textContent = '🟢 ຮ້ານເປີດຢູ່ — ກົດເພື່ອປິດ';
+      btn.textContent = '🟢 Walk-in: ເປີດຢູ່';
       btn.style.background = 'var(--green-bg)';
       btn.style.color = 'var(--green)';
       btn.style.border = '2px solid var(--green)';
     } else {
-      btn.textContent = '🔴 ຮ້ານປິດ — ກົດເພື່ອເປີດ';
+      btn.textContent = '🔴 Walk-in: ປິດ';
       btn.style.background = 'var(--red-bg)';
       btn.style.color = 'var(--red)';
       btn.style.border = '2px solid var(--red)';
     }
   }
-  // อัปเดตปุ่มใน header ด้วย
+  // online button
+  const ob = document.getElementById('onlineToggleBtn');
+  if(ob) {
+    if(onlineOpen) {
+      ob.textContent = '🟢 Online: ເປີດຢູ່';
+      ob.style.background = 'var(--green-bg)';
+      ob.style.color = 'var(--green)';
+      ob.style.border = '2px solid var(--green)';
+    } else {
+      ob.textContent = '🔴 Online: ປິດ';
+      ob.style.background = 'var(--red-bg)';
+      ob.style.color = 'var(--red)';
+      ob.style.border = '2px solid var(--red)';
+    }
+  }
+  // header button
   const hBtn = document.getElementById('shopStatusBtn');
   if(hBtn) {
     if(s.open) {
@@ -599,6 +618,13 @@ function renderShopStatus() {
       hBtn.style.color = '#fca5a5';
     }
   }
+}
+
+function toggleOnlineShop() {
+  const open = localStorage.getItem('bcb_online_open') === '1';
+  localStorage.setItem('bcb_online_open', open ? '0' : '1');
+  renderShopStatus();
+  toast(!open ? '🟢 Online: ເປີດຮັບອໍເດີ' : '🔴 Online: ປິດຮັບອໍເດີ', !open ? 'green' : 'red');
 }
 
 // ── Staff History Search ──
