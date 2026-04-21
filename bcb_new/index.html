@@ -1,1 +1,291 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Basic Chinese Bun</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --br:#3d1f0a;--br2:#6b3a1f;--br3:#a0522d;
+  --cr:#fdf6ee;--cr2:#f5ebe0;--cr3:#e8d5c0;
+  --ww:#fffbf6;--gr:#8a6a55;--rd:#b91c1c;
+}
+body{font-family:'Noto Sans Lao',sans-serif;background:var(--cr);color:var(--br);min-height:100vh;}
+button,input,textarea{font-family:'Noto Sans Lao',sans-serif;}
+input,textarea{font-size:16px!important;}
+.step{display:none;min-height:100vh;flex-direction:column;}
+.step.active{display:flex;}
+.hdr{background:var(--br);padding:14px 16px;flex-shrink:0;text-align:center;}
+.hdr-title{font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,24px);font-weight:900;color:var(--cr);}
+.hdr-sub{font-size:12px;color:rgba(253,246,238,0.5);letter-spacing:2px;margin-top:3px;}
+.body{flex:1;overflow-y:auto;padding:14px 12px;}
+.foot{padding:12px;border-top:2px solid var(--cr3);background:var(--ww);flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
+.btn-main{width:100%;padding:18px;background:var(--br);color:var(--cr);border:none;border-radius:14px;font-size:clamp(16px,3vw,18px);font-weight:900;cursor:pointer;}
+.btn-main:disabled{background:var(--cr3);color:var(--gr);}
+.btn-sec{width:100%;padding:14px;background:var(--ww);color:var(--br);border:2.5px solid var(--br);border-radius:14px;font-size:clamp(14px,2.5vw,16px);font-weight:900;cursor:pointer;}
+.slabel{font-size:12px;font-weight:900;color:var(--gr);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;text-align:center;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+@media(min-width:560px){.mgrid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:860px){.mgrid{grid-template-columns:repeat(4,1fr);}}
+.mcard{border:2.5px solid var(--cr3);border-radius:14px;overflow:hidden;cursor:pointer;background:var(--ww);transition:border-color 0.15s;position:relative;}
+.mcard.sel{border-color:var(--br);box-shadow:0 0 0 2px var(--br);}
+.mcard.out{opacity:0.5;cursor:not-allowed;}
+.mimg{width:100%;aspect-ratio:1;overflow:hidden;background:var(--cr2);position:relative;}
+.mimg img{width:100%;height:100%;object-fit:cover;}
+.memo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(30px,6vw,46px);}
+.sold-ov{position:absolute;inset:0;background:rgba(61,31,10,0.6);display:flex;align-items:center;justify-content:center;}
+.sold-lbl{color:var(--cr);font-size:14px;font-weight:900;background:rgba(185,28,28,0.9);padding:5px 10px;border-radius:8px;}
+.badge{position:absolute;top:6px;right:6px;width:24px;height:24px;background:var(--br);border-radius:50%;display:none;align-items:center;justify-content:center;color:var(--cr);font-size:12px;z-index:2;}
+.mcard.sel .badge{display:flex;}
+.mfoot{padding:8px 10px;}
+.mname{font-size:clamp(12px,2.5vw,15px);font-weight:900;color:var(--br);}
+.mprice{font-size:clamp(12px,2.5vw,14px);font-weight:900;color:var(--br2);margin-top:2px;}
+.qrow{display:none;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--cr2);border-top:1.5px solid var(--cr3);}
+.mcard.sel .qrow{display:flex;}
+.qlbl{font-size:12px;font-weight:700;color:var(--gr);}
+.qctrl{display:flex;align-items:center;gap:6px;}
+.qbtn{width:30px;height:30px;border:2px solid var(--br);border-radius:50%;background:var(--ww);font-size:18px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--br);}
+.qinput{width:42px;height:32px;border:2px solid var(--br);border-radius:8px;text-align:center;font-size:16px;font-weight:900;background:var(--ww);color:var(--br);}
+.bag-sum{background:var(--cr2);border-radius:12px;padding:14px;font-size:clamp(16px,3vw,20px);font-weight:900;color:var(--br);text-align:center;margin-bottom:14px;}
+.bopt{border:3px solid var(--cr3);border-radius:16px;padding:16px;cursor:pointer;background:var(--ww);margin-bottom:10px;transition:all 0.15s;}
+.bopt.sel{border-color:var(--br);background:var(--cr2);}
+.bopt-title{font-size:clamp(16px,3vw,20px);font-weight:900;color:var(--br);margin-bottom:4px;}
+.bopt-desc{font-size:clamp(12px,2vw,14px);color:var(--gr);font-weight:700;}
+.recap{border:2.5px solid var(--cr3);border-radius:16px;overflow:hidden;background:var(--ww);margin-bottom:12px;}
+.recap-title{font-size:12px;font-weight:900;color:var(--gr);letter-spacing:2px;text-transform:uppercase;padding:14px 16px 10px;border-bottom:1.5px solid var(--cr3);}
+.recap-items{padding:10px 16px;}
+.recap-row{display:flex;justify-content:space-between;font-size:clamp(14px,2.5vw,16px);font-weight:700;padding:6px 0;border-bottom:1px solid var(--cr2);}
+.recap-row:last-child{border-bottom:none;}
+.recap-bag{padding:10px 16px;border-top:1px solid var(--cr3);font-size:13px;font-weight:700;color:var(--gr);}
+.recap-sep{height:2px;background:var(--br);}
+.recap-total{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--br);}
+.recap-total-lbl{font-size:13px;font-weight:700;color:rgba(253,246,238,0.6);}
+.recap-total-amt{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,28px);font-weight:900;color:var(--cr);}
+.qr-top{background:var(--br);padding:20px 16px;text-align:center;flex-shrink:0;}
+.qr-shop{font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:var(--cr);opacity:0.7;}
+.qr-lbl{font-size:11px;color:rgba(253,246,238,0.5);margin-top:8px;letter-spacing:2px;}
+.qr-amt{font-family:'Playfair Display',serif;font-size:clamp(38px,7vw,52px);font-weight:900;color:var(--cr);margin-top:4px;}
+.qr-unit{font-size:16px;color:rgba(253,246,238,0.6);}
+.qr-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;gap:14px;}
+.qr-hint{font-size:clamp(14px,2.5vw,16px);font-weight:700;color:var(--gr);text-align:center;}
+.qr-wrap{width:min(72vw,280px);height:min(72vw,280px);border:3px solid var(--br);border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--ww);}
+.qr-wrap img{width:100%;height:100%;object-fit:contain;}
+.qr-empty{width:min(72vw,280px);height:min(72vw,280px);border:3px dashed var(--cr3);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--cr2);}
+.qr-banks{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.qr-bank{font-size:12px;font-weight:900;color:var(--br2);background:var(--cr2);border-radius:8px;padding:5px 12px;}
+.fullmsg{font-size:14px;font-weight:700;color:var(--rd);text-align:center;display:none;}
+.tkt-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;gap:14px;background:var(--cr);}
+.tkt{width:100%;max-width:360px;border:3px solid var(--br);border-radius:20px;overflow:hidden;animation:pop 0.45s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 32px rgba(61,31,10,0.15);}
+@keyframes pop{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.tkt-top{background:var(--br);padding:18px;text-align:center;}
+.tkt-shop{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--cr);}
+.tkt-sub{font-size:11px;color:rgba(253,246,238,0.4);margin-top:3px;letter-spacing:2px;}
+.tkt-body{padding:20px;text-align:center;background:var(--ww);}
+.tkt-numlbl{font-size:11px;font-weight:700;color:var(--gr);letter-spacing:3px;text-transform:uppercase;}
+.tkt-num{font-family:'Playfair Display',serif;font-size:88px;font-weight:900;color:var(--br);line-height:1;}
+.tkt-items{font-size:clamp(14px,2.5vw,16px);font-weight:700;color:var(--br2);margin-top:10px;line-height:1.8;text-align:left;background:var(--cr2);border-radius:10px;padding:10px 12px;}
+.tkt-bag{font-size:13px;font-weight:700;color:var(--gr);background:var(--cr2);border-radius:8px;padding:8px 12px;margin-top:8px;text-align:left;}
+.tkt-dash{border:none;border-top:2px dashed var(--cr3);margin:14px 0 10px;}
+.tkt-info{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--gr);}
+.tkt-foot{background:var(--cr2);border-top:2px solid var(--cr3);padding:12px;text-align:center;font-size:14px;font-weight:700;color:var(--br2);}
+</style>
+</head>
+<body>
+<div class="step active" id="step1">
+  <div class="hdr"><div class="hdr-title">Basic Chinese Bun</div><div class="hdr-sub">ເລືອກເມນູ · CHOOSE MENU</div></div>
+  <div class="body"><div class="slabel">ຈິ້ມເພື່ອເລືອກ</div><div class="mgrid" id="menuGrid"></div></div>
+  <div class="foot"><button class="btn-main" id="btnConfirm" onclick="goBag()" disabled>ຢືນຢັນ →</button></div>
+</div>
+<div class="step" id="step2">
+  <div class="hdr"><div class="hdr-title">ຈັດຖົງ</div><div class="hdr-sub">ເລືອກວິທີຈັດຖົງ</div></div>
+  <div class="body">
+    <div class="bag-sum" id="bagSum"></div>
+    <div class="bopt" id="b1" onclick="selBag(1)"><div class="bopt-title">🛍 ຖົງດຽວລວມທັງໝົດ</div><div class="bopt-desc">ໃສ່ທຸກຢ່າງໃນຖົງດຽວກັນ</div></div>
+    <div class="bopt" id="b2" onclick="selBag(2)"><div class="bopt-title">📦 ແຍກຕາມປະເພດເມນູ</div><div class="bopt-desc">ຊ໋ອກໂກແລດຖົງໜຶ່ງ · ມັດຊະຖົງໜຶ່ງ</div></div>
+    <div class="bopt" id="b3" onclick="selBag(3)"><div class="bopt-title">1️⃣ ແຍກທີລະກ້ອນ</div><div class="bopt-desc">ຂະໜົມ 1 ກ້ອນ = ຖົງ 1 ໃບ</div></div>
+  </div>
+  <div class="foot">
+    <button class="btn-main" id="btnBag" onclick="goSummary()" disabled>ຕໍ່ໄປ →</button>
+    <button class="btn-sec" onclick="go(1)">← ກັບ</button>
+  </div>
+</div>
+<div class="step" id="step3">
+  <div class="hdr"><div class="hdr-title">ສະຫຼຸບລາຍການ</div><div class="hdr-sub">ກວດສອບກ່ອນຊຳລະ</div></div>
+  <div class="body">
+    <div class="recap">
+      <div class="recap-title">ລາຍການສັ່ງ</div>
+      <div class="recap-items" id="recapItems"></div>
+      <div class="recap-bag" id="recapBag"></div>
+      <div class="recap-sep"></div>
+      <div class="recap-total"><span class="recap-total-lbl">ລວມທັງໝົດ</span><span class="recap-total-amt" id="recapTotal"></span></div>
+    </div>
+  </div>
+  <div class="foot">
+    <button class="btn-main" onclick="goQR()">💳 ໄປຊຳລະເງິນ</button>
+    <button class="btn-sec" onclick="go(1)">← ແກ້ໄຂລາຍການ</button>
+  </div>
+</div>
+<div class="step" id="step4">
+  <div class="qr-top">
+    <div class="qr-shop">Basic Chinese Bun</div>
+    <div class="qr-lbl">ຍອດທີ່ຕ້ອງຊຳລະ</div>
+    <div class="qr-amt" id="qrAmt"></div>
+  </div>
+  <div class="qr-body">
+    <div class="qr-hint">📱 ສະແກນ QR ແລ້ວໂອນເງິນ</div>
+    <div class="qr-wrap" id="qrWrap" style="display:none;"><img id="qrImg" src=""></div>
+    <div class="qr-empty" id="qrEmpty"><div style="font-size:48px">📷</div><div style="font-size:13px;font-weight:700;color:var(--gr);">ຍັງບໍ່ມີ QR Code</div></div>
+    <div class="qr-banks"><span class="qr-bank">BCEL</span><span class="qr-bank">OnePay</span><span class="qr-bank">PromptPay</span></div>
+  </div>
+  <div class="foot">
+    <div class="fullmsg" id="fullMsg">⚠️ ຮ້ານຍັງບໍ່ໄດ້ເປີດ</div>
+    <button class="btn-main" onclick="getTicket()">🎫 ຮັບບັດຄິວ</button>
+    <button class="btn-sec" onclick="go(3)">← ກັບ</button>
+  </div>
+</div>
+<div class="step" id="step5">
+  <div class="tkt-wrap">
+    <div class="tkt">
+      <div class="tkt-top"><div class="tkt-shop">Basic Chinese Bun</div><div class="tkt-sub">QUEUE TICKET</div></div>
+      <div class="tkt-body">
+        <div class="tkt-numlbl">ໝາຍເລກຄິວ</div>
+        <div class="tkt-num" id="tktNum">001</div>
+        <div class="tkt-items" id="tktItems"></div>
+        <div class="tkt-bag" id="tktBag" style="display:none;"></div>
+        <hr class="tkt-dash">
+        <div class="tkt-info"><span id="tktTime"></span><span id="tktTotal"></span></div>
+      </div>
+      <div class="tkt-foot">🙏 ຂອບໃຈທີ່ໃຊ້ບໍລິການ</div>
+    </div>
+    <button class="btn-sec" style="max-width:360px;" onclick="newOrder()">↺ ສັ່ງໃໝ່</button>
+  </div>
+</div>
+<script>
+const EMOJIS=['🥟','🍫','🍵','🧁','🍞','🥐','🍮'];
+const BAG_LABELS=['','🛍 ຖົງດຽວລວມທັງໝົດ','📦 ແຍກຕາມປະເພດເມນູ','1️⃣ ແຍກທີລະກ້ອນ'];
+let menus=[],prices=[],sel=[],qty=[],bagType=0,total=0;
 
+function loadData(){
+  const sm=localStorage.getItem('bcb_menus');
+  menus=sm?JSON.parse(sm):[
+    {lo:'ຊາລາເປົາໝູສັບ'},{lo:'ໝັນໂຖ ຊ໋ອກໂກແລດ'},{lo:'ໝັນໂຖ ມັດຊະ'},
+    {lo:'ເມນູ 4'},{lo:'ເມນູ 5'},{lo:'ເມນູ 6'},{lo:'ເມນູ 7'}
+  ];
+  const sp=localStorage.getItem('bcb_prices');
+  prices=sp?JSON.parse(sp):new Array(menus.length).fill(0);
+  while(prices.length<menus.length)prices.push(0);
+  sel=new Array(menus.length).fill(false);
+  qty=new Array(menus.length).fill(1);
+  buildGrid();
+  const qr=localStorage.getItem('bcb_qr');
+  if(qr){document.getElementById('qrImg').src=qr;document.getElementById('qrWrap').style.display='flex';document.getElementById('qrEmpty').style.display='none';}
+}
+
+function buildGrid(){
+  const st=JSON.parse(localStorage.getItem('bcb_stock_walkin')||'[]');
+  document.getElementById('menuGrid').innerHTML=menus.map((m,i)=>{
+    const img=localStorage.getItem('bcb_img_'+i);
+    const out=st[i]===0;
+    return `<div class="mcard${out?' out':''}" id="c${i}" ${out?'':'onclick="tog('+i+')"'}>
+      <div class="badge" id="badge${i}">✓</div>
+      <div class="mimg">
+        <div class="memo" ${img?'style="display:none"':''}>${EMOJIS[i]||'🍱'}</div>
+        <img src="${img||''}" style="${img?'':'display:none'}">
+        ${out?'<div class="sold-ov"><span class="sold-lbl">ໝົດແລ້ວ</span></div>':''}
+      </div>
+      <div class="mfoot">
+        <div class="mname">${m.lo}</div>
+        <div class="mprice">${out?'<span style="color:var(--rd)">ໝົດ</span>':prices[i]?prices[i].toLocaleString()+' ກີບ':'—'}</div>
+      </div>
+      <div class="qrow" id="qr${i}">
+        <span class="qlbl">ຈຳນວນ</span>
+        <div class="qctrl">
+          <button class="qbtn" onclick="chg(event,${i},-1)">−</button>
+          <input class="qinput" type="text" inputmode="numeric" id="q${i}" value="1"
+            onclick="this.select();event.preventDefault();"
+            onblur="setQ(${i},this.value)"
+            onkeydown="if(event.key==='Enter'){setQ(${i},this.value);this.blur();}">
+          <button class="qbtn" onclick="chg(event,${i},1)">+</button>
+        </div>
+      </div></div>`;
+  }).join('');
+}
+
+function tog(i){
+  sel[i]=!sel[i];
+  if(!sel[i]){qty[i]=1;const q=document.getElementById('q'+i);if(q)q.value=1;}
+  document.getElementById('c'+i).classList.toggle('sel',sel[i]);
+  document.getElementById('btnConfirm').disabled=!sel.some(s=>s);
+}
+function chg(e,i,d){
+  e.stopPropagation();e.preventDefault();
+  const n=Math.max(1,(parseInt(document.getElementById('q'+i)?.value||qty[i])||1)+d);
+  qty[i]=n;const inp=document.getElementById('q'+i);
+  if(inp){inp.value=n;inp.blur();}
+  if(document.activeElement)document.activeElement.blur();
+}
+function setQ(i,v){qty[i]=Math.max(1,parseInt(v)||1);const inp=document.getElementById('q'+i);if(inp)inp.value=qty[i];}
+function go(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById('step'+n).classList.add('active');window.scrollTo(0,0);}
+function goBag(){
+  let t=0;
+  sel.forEach((s,i)=>{if(s){const q=parseInt(document.getElementById('q'+i)?.value||qty[i])||1;qty[i]=q;t+=q;}});
+  document.getElementById('bagSum').textContent='ຂະໜົມທັງໝົດ '+t+' ກ້ອນ';
+  bagType=0;[1,2,3].forEach(n=>document.getElementById('b'+n).classList.remove('sel'));
+  document.getElementById('btnBag').disabled=true;go(2);
+}
+function selBag(n){
+  bagType=n;[1,2,3].forEach(i=>document.getElementById('b'+i).classList.remove('sel'));
+  document.getElementById('b'+n).classList.add('sel');
+  document.getElementById('btnBag').disabled=false;
+}
+function goSummary(){
+  total=0;let html='';
+  sel.forEach((s,i)=>{if(!s)return;const q=qty[i],sub=prices[i]*q;total+=sub;html+=`<div class="recap-row"><span>${menus[i].lo} ×${q}</span><span>${sub?sub.toLocaleString()+' ກີບ':'—'}</span></div>`;});
+  document.getElementById('recapItems').innerHTML=html;
+  const bagEl=document.getElementById('recapBag');
+  if(bagType){bagEl.innerHTML='🛍 '+BAG_LABELS[bagType];bagEl.style.display='block';}else{bagEl.style.display='none';}
+  document.getElementById('recapTotal').textContent=total?total.toLocaleString()+' ກີບ':'—';
+  go(3);
+}
+function goQR(){
+  document.getElementById('qrAmt').innerHTML=total?total.toLocaleString()+' <span class="qr-unit">ກີບ</span>':'—';go(4);
+}
+function getTicket(){
+  const status=JSON.parse(localStorage.getItem('bcb_shop_status')||'{"open":false}');
+  const msg=document.getElementById('fullMsg');
+  if(!status.open){msg.style.display='block';msg.textContent='⚠️ ຮ້ານຍັງບໍ່ໄດ້ເປີດ';return;}
+  msg.style.display='none';
+  const orders=JSON.parse(localStorage.getItem('bcb_orders')||'[]');
+  const qs=JSON.parse(localStorage.getItem('bcb_queue')||'{"next":1}');
+  const myNum=qs.next;
+  let lines='';
+  sel.forEach((s,i)=>{if(s)lines+=menus[i].lo+' ×'+qty[i]+'\n';});
+  const now=new Date().toLocaleTimeString('lo-LA',{hour:'2-digit',minute:'2-digit'});
+  orders.unshift({num:myNum,items:lines.trim(),total,time:now,bag:BAG_LABELS[bagType]||'',type:'walkin',done:false,cancelled:false,called:false});
+  localStorage.setItem('bcb_orders',JSON.stringify(orders));
+  localStorage.setItem('bcb_queue',JSON.stringify({next:myNum+1,serving:qs.serving||0}));
+  const st=JSON.parse(localStorage.getItem('bcb_stock_walkin')||'[]');
+  sel.forEach((s,i)=>{if(s&&st[i]!==undefined)st[i]=Math.max(0,(st[i]||0)-qty[i]);});
+  localStorage.setItem('bcb_stock_walkin',JSON.stringify(st));
+  document.getElementById('tktNum').textContent=String(myNum).padStart(3,'0');
+  document.getElementById('tktItems').innerHTML=lines.trim().replace(/\n/g,'<br>');
+  const bagEl=document.getElementById('tktBag');
+  if(bagType){bagEl.textContent=BAG_LABELS[bagType];bagEl.style.display='block';}else{bagEl.style.display='none';}
+  document.getElementById('tktTime').textContent=now;
+  document.getElementById('tktTotal').textContent=total?total.toLocaleString()+' ກີບ':'';
+  go(5);
+}
+function newOrder(){
+  sel=new Array(menus.length).fill(false);qty=new Array(menus.length).fill(1);total=0;bagType=0;
+  menus.forEach((_,i)=>{const c=document.getElementById('c'+i);if(c)c.classList.remove('sel');const q=document.getElementById('q'+i);if(q)q.value=1;});
+  document.getElementById('btnConfirm').disabled=true;
+  document.getElementById('fullMsg').style.display='none';
+  go(1);
+}
+loadData();
+window.addEventListener('storage',()=>loadData());
+</script>
+</body>
+</html>

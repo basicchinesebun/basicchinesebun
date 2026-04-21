@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Basic Chinese Bun — ພະນັກງານ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --br:#3d1f0a;--br2:#6b3a1f;--br3:#a0522d;
+  --cr:#fdf6ee;--cr2:#f5ebe0;--cr3:#e8d5c0;
+  --ww:#fffbf6;--gr:#8a6a55;
+  --green:#2d6a2d;--gbg:#e8f5e8;
+  --red:#b91c1c;--rbg:#fef2f2;
+  --orange:#c45c00;--obg:#fff4e5;
+  --blue:#1a56a0;--bbg:#e8f0fe;
+  --r:12px;
+}
+body{font-family:'Noto Sans Lao',sans-serif;background:var(--cr);color:var(--br);min-height:100vh;padding-bottom:70px;}
+button{font-family:'Noto Sans Lao',sans-serif;cursor:pointer;}
+input,textarea{font-family:'Noto Sans Lao',sans-serif;font-size:16px!important;}
+
+/* Pages */
+.page{display:none;}
+.page.active{display:block;}
+
+/* Header */
+.hdr{background:var(--br);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:8px;}
+.hdr-logo{font-family:'Playfair Display',serif;font-size:clamp(15px,3vw,20px);font-weight:900;color:var(--cr);white-space:nowrap;}
+.hdr-btns{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
+.hbtn{padding:7px 10px;border-radius:8px;font-size:clamp(11px,1.8vw,13px);font-weight:900;border:1.5px solid rgba(253,246,238,0.35);background:transparent;color:var(--cr);white-space:nowrap;}
+
+/* Layout */
+.layout{display:flex;flex-direction:column;max-width:1400px;margin:0 auto;}
+@media(min-width:768px){
+  .layout{display:grid;grid-template-columns:300px 1fr;align-items:start;}
+  .sidebar{position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+}
+.sidebar{padding:10px 10px 80px;display:flex;flex-direction:column;gap:8px;}
+.main-col{padding:10px;display:flex;flex-direction:column;gap:10px;}
+
+/* Cards */
+.card{background:var(--ww);border:1.5px solid var(--cr3);border-radius:var(--r);padding:12px;}
+.card-title{font-size:12px;font-weight:900;color:var(--br3);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.card-title::after{content:'▾';font-size:13px;color:var(--br3);transition:transform 0.25s;flex-shrink:0;}
+.card.collapsed .card-title::after{transform:rotate(-90deg);}
+.card-body{overflow:hidden;max-height:2000px;transition:max-height 0.35s ease,opacity 0.25s ease;opacity:1;}
+.card.collapsed .card-body{max-height:0;opacity:0;}
+#menuCard .card-body,#stockCard .card-body{overflow-y:auto;max-height:55vh;-webkit-overflow-scrolling:touch;}
+#menuCard.collapsed .card-body,#stockCard.collapsed .card-body{max-height:0!important;overflow:hidden!important;}
+
+/* Shop toggles */
+.toggle-btn{width:100%;padding:12px;font-size:14px;font-weight:900;border-radius:10px;border:2px solid;margin-bottom:6px;}
+.toggle-btn.open{background:var(--gbg);color:var(--green);border-color:var(--green);}
+.toggle-btn.closed{background:var(--rbg);color:var(--red);border-color:var(--red);}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.stat{background:var(--cr2);border-radius:10px;padding:10px;text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,30px);font-weight:900;color:var(--br);}
+.stat-lbl{font-size:11px;font-weight:700;color:var(--gr);margin-top:2px;}
+
+/* Orders */
+.orders-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.orders-title{font-size:clamp(13px,2vw,16px);font-weight:900;color:var(--br);}
+.done-btn{padding:7px 12px;border-radius:8px;font-size:12px;font-weight:900;border:1.5px solid var(--cr3);background:var(--ww);color:var(--gr);}
+
+/* Order card */
+.ocard{background:var(--ww);border:1.5px solid var(--cr3);border-radius:14px;overflow:hidden;margin-bottom:10px;transition:opacity 0.2s;}
+.ocard.done{opacity:0.5;}
+.ocard.cancelled{opacity:0.4;}
+.istrip{display:flex;flex-wrap:wrap;background:var(--cr2);}
+.iitem{width:72px;height:72px;position:relative;flex-shrink:0;}
+.iitem img,.iemoji{width:100%;height:100%;object-fit:cover;}
+.iemoji{display:flex;align-items:center;justify-content:center;font-size:32px;background:var(--cr2);}
+.iqty{position:absolute;bottom:3px;right:3px;background:rgba(61,31,10,0.8);color:var(--cr);font-size:10px;font-weight:900;border-radius:4px;padding:1px 5px;}
+.obody{padding:12px;}
+.ohead{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+.oqnum{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,30px);font-weight:900;color:var(--br);}
+.oright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.otime{font-size:12px;font-weight:700;color:var(--gr);}
+.otag{font-size:11px;font-weight:900;border-radius:6px;padding:3px 8px;}
+.otag.walkin{background:var(--cr2);color:var(--br3);}
+.otag.online{background:var(--bbg);color:var(--blue);}
+.otag.pending{background:var(--obg);color:var(--orange);}
+.otag.confirmed{background:var(--gbg);color:var(--green);}
+.otag.rejected{background:var(--rbg);color:var(--red);}
+.oitems{font-size:clamp(13px,2vw,15px);font-weight:700;color:var(--br2);line-height:1.8;white-space:pre-line;margin-bottom:6px;}
+.obag{font-size:clamp(14px,2.2vw,17px);font-weight:900;color:var(--br);background:var(--cr2);border-radius:8px;padding:8px 12px;margin-bottom:6px;border-left:4px solid var(--br3);}
+.ocustomer{font-size:12px;font-weight:700;color:var(--gr);margin-bottom:6px;line-height:1.7;}
+.onote{font-size:12px;font-weight:700;color:var(--gr);background:var(--obg);border-radius:6px;padding:6px 10px;margin-bottom:6px;}
+.oslip{margin-bottom:8px;}
+.oslip-lbl{font-size:11px;font-weight:900;color:var(--gr);margin-bottom:4px;}
+.oslip img{width:100%;max-width:160px;border-radius:8px;border:1.5px solid var(--cr3);cursor:pointer;}
+.ototal{font-size:clamp(14px,2.5vw,17px);font-weight:900;color:var(--br);margin-bottom:10px;}
+.oactions{display:flex;gap:6px;flex-wrap:wrap;}
+.abtn{padding:10px 8px;border-radius:10px;font-size:clamp(12px,2vw,14px);font-weight:900;border:none;flex:1;min-width:0;text-align:center;}
+.abtn-done{background:var(--br);color:var(--cr);}
+.abtn-call{background:var(--cr2);color:var(--br);}
+.abtn-cancel{background:var(--rbg);color:var(--red);border:1.5px solid var(--red);}
+.abtn-undo{background:var(--cr2);color:var(--br);width:100%;}
+.abtn-confirm{background:var(--gbg);color:var(--green);border:1.5px solid var(--green);}
+.abtn-reject{background:var(--rbg);color:var(--red);border:1.5px solid var(--red);}
+.empty{text-align:center;padding:40px 20px;color:var(--gr);font-size:15px;font-weight:700;}
+
+/* Menu settings */
+.mset-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--cr2);}
+.mset-row:last-child{border-bottom:none;}
+.mset-num{font-size:12px;font-weight:700;color:var(--gr);width:16px;flex-shrink:0;}
+.mset-name{flex:1;border:1.5px solid var(--cr3);border-radius:8px;padding:8px 10px;font-size:15px;font-weight:700;color:var(--br);background:var(--cr);}
+.mset-price{width:80px;border:1.5px solid var(--cr3);border-radius:8px;padding:8px;font-size:15px;font-weight:700;text-align:center;color:var(--br);background:var(--cr);}
+.mset-img label{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:2px dashed var(--cr3);border-radius:8px;cursor:pointer;overflow:hidden;}
+.mset-img label img{width:100%;height:100%;object-fit:cover;}
+.mset-img label span{font-size:22px;}
+.mset-img input{display:none;}
+.save-btn{width:100%;padding:12px;background:var(--br);color:var(--cr);border:none;border-radius:10px;font-size:14px;font-weight:900;margin-top:10px;}
+
+/* Stock */
+.stock-tabs{display:flex;gap:6px;margin-bottom:10px;}
+.stab{flex:1;padding:8px;border-radius:8px;font-size:12px;font-weight:900;border:1.5px solid var(--cr3);background:var(--ww);color:var(--br);}
+.stab.active{background:var(--br);color:var(--cr);border-color:var(--br);}
+.stock-row{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--cr2);}
+.stock-row:last-child{border-bottom:none;}
+.stock-name{flex:1;font-size:13px;font-weight:700;color:var(--br);}
+.sctrl{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.sbtn{width:28px;height:28px;border:1.5px solid var(--br3);border-radius:50%;background:var(--ww);font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;color:var(--br);}
+.sinput{width:48px;height:30px;border:1.5px solid var(--br3);border-radius:7px;text-align:center;font-size:14px;font-weight:900;background:var(--ww);color:var(--br);}
+.sinput.low{border-color:var(--orange);color:var(--orange);}
+.sinput.out{border-color:var(--cr3);color:var(--cr3);}
+.dist-btn{width:100%;padding:10px;background:var(--br2);color:var(--cr);border:none;border-radius:8px;font-size:13px;font-weight:900;margin-bottom:8px;}
+
+/* Sales */
+.sale-total-card{background:var(--br);border-radius:14px;padding:16px;margin-bottom:12px;text-align:center;}
+.sale-total-lbl{font-size:12px;color:rgba(253,246,238,0.6);letter-spacing:1px;}
+.sale-total-amt{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,38px);font-weight:900;color:var(--cr);margin-top:4px;}
+.sale-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.sale-card{background:var(--cr2);border-radius:10px;padding:12px;text-align:center;}
+.sale-card-num{font-size:clamp(20px,3vw,26px);font-weight:900;color:var(--br);}
+.sale-card-lbl{font-size:11px;font-weight:700;color:var(--gr);margin-top:3px;}
+.menu-bar{margin-bottom:8px;}
+.menu-bar-name{font-size:13px;font-weight:900;color:var(--br);margin-bottom:3px;}
+.menu-bar-track{background:var(--cr2);border-radius:6px;height:10px;overflow:hidden;}
+.menu-bar-fill{background:var(--br);height:100%;border-radius:6px;transition:width 0.4s;}
+.menu-bar-info{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--gr);margin-top:2px;}
+
+/* Receipt */
+.receipt-preview{border:1.5px solid var(--cr3);border-radius:12px;padding:16px;background:var(--ww);}
+
+/* QR Admin */
+.qr-admin-wrap{text-align:center;margin-bottom:10px;}
+.qr-admin-img{width:120px;height:120px;border:2px solid var(--br);border-radius:10px;object-fit:contain;}
+
+/* Bottom nav */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--br);display:flex;border-top:2px solid var(--br2);z-index:200;}
+.nbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;border:none;background:transparent;color:rgba(253,246,238,0.45);}
+.nbtn.active{color:var(--cr);}
+.nbtn-icon{font-size:clamp(18px,3vw,24px);}
+.nbtn-lbl{font-size:clamp(10px,1.8vw,12px);font-weight:700;margin-top:2px;}
+
+/* Toast */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9000;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;}
+.ti{padding:9px 18px;border-radius:20px;font-size:13px;font-weight:700;color:var(--cr);background:var(--br);box-shadow:0 4px 16px rgba(61,31,10,0.2);animation:fu 0.3s ease;white-space:nowrap;}
+.ti.green{background:var(--green);}
+.ti.red{background:var(--red);}
+.ti.orange{background:var(--orange);}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(61,31,10,0.5);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--ww);border-radius:18px;padding:20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:17px;font-weight:900;color:var(--br);margin-bottom:6px;}
+.modal-sub{font-size:13px;font-weight:700;color:var(--gr);margin-bottom:14px;}
+.mbtn{width:100%;padding:13px;border-radius:10px;font-size:14px;font-weight:900;border:none;margin-bottom:8px;}
+.mbtn.primary{background:var(--br);color:var(--cr);}
+.mbtn.outline{background:var(--ww);color:var(--br);border:2px solid var(--br);}
+.mbtn.danger{background:var(--red);color:white;}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- ══ PAGE: ORDERS ══ -->
+<div class="page active" id="pg-orders">
+  <div class="hdr">
+    <div class="hdr-logo">Basic Chinese Bun</div>
+    <div class="hdr-btns">
+      <button class="hbtn" id="hShopBtn" onclick="toggleShop('walkin')" style="border-color:#fca5a5;color:#fca5a5;">🔴 Walk-in</button>
+      <button class="hbtn" id="hOnlineBtn" onclick="toggleShop('online')" style="border-color:#fca5a5;color:#fca5a5;">🔴 Online</button>
+    </div>
+  </div>
+  <div class="layout">
+    <div class="sidebar">
+      <!-- Shop toggles -->
+      <div class="card">
+        <button class="toggle-btn closed" id="sideShopBtn" onclick="toggleShop('walkin')">🔴 Walk-in: ປິດ</button>
+        <button class="toggle-btn closed" id="sideOnlineBtn" onclick="toggleShop('online')">🔴 Online: ປິດ</button>
+      </div>
+      <!-- Menu settings -->
+      <div class="card collapsed" id="menuCard">
+        <div class="card-title" onclick="toggleCard('menuCard')">🍱 ເມນູ & ລາຄາ</div>
+        <div class="card-body">
+          <div id="menuSetList"></div>
+          <button class="save-btn" onclick="saveMenuSettings()">💾 ບັນທຶກ</button>
+        </div>
+      </div>
+      <!-- Stock -->
+      <div class="card collapsed" id="stockCard">
+        <div class="card-title" onclick="toggleCard('stockCard')">📦 ສຕ໋ອກ / Stock</div>
+        <div class="card-body">
+          <div class="stock-tabs">
+            <button class="stab active" id="stab-total" onclick="switchStock('total')">📦 ລວມ</button>
+            <button class="stab" id="stab-walkin" onclick="switchStock('walkin')">🏪 ໜ້າຮ້ານ</button>
+            <button class="stab" id="stab-online" onclick="switchStock('online')">🌐 ອອນໄລນ໌</button>
+          </div>
+          <button class="dist-btn" id="distBtn" style="display:none;" onclick="openDistribute()">⚖️ ແຈກຈ່າຍ ໜ້າຮ້ານ + ອອນໄລນ໌</button>
+          <div id="stockList"></div>
+          <button class="save-btn" onclick="saveStock()">💾 ບັນທຶກສຕ໋ອກ</button>
+        </div>
+      </div>
+      <!-- QR -->
+      <div class="card collapsed" id="qrCard">
+        <div class="card-title" onclick="toggleCard('qrCard')">📱 QR ຊຳລະເງິນ</div>
+        <div class="card-body">
+          <div class="qr-admin-wrap">
+            <img id="qrAdminImg" class="qr-admin-img" src="" style="display:none;">
+            <div id="qrAdminEmpty" style="font-size:13px;font-weight:700;color:var(--gr);padding:10px 0;">ຍັງບໍ່ມີ QR</div>
+          </div>
+          <label style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:var(--br);color:var(--cr);border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;">
+            📤 ອັບໂຫລດ QR<input type="file" accept="image/*" onchange="uploadQR(event)" style="display:none;">
+          </label>
+          <button id="qrRemoveBtn" onclick="removeQR()" style="display:none;width:100%;margin-top:6px;padding:10px;background:var(--ww);color:var(--red);border:1.5px solid var(--red);border-radius:10px;font-size:13px;font-weight:900;">✕ ລຶບ QR</button>
+        </div>
+      </div>
+      <!-- Data -->
+      <div class="card collapsed" id="dataCard">
+        <div class="card-title" onclick="toggleCard('dataCard')">💾 ຂໍ້ມູນ / Data</div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+          <button class="save-btn" onclick="exportData()" style="background:var(--br2);">📤 Export JSON</button>
+          <label style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:var(--ww);color:var(--br);border:1.5px solid var(--br);border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;">
+            📥 Import JSON<input type="file" accept=".json" onchange="importData(event)" style="display:none;">
+          </label>
+          <button onclick="openReset()" style="width:100%;padding:11px;background:var(--rbg);color:var(--red);border:1.5px solid var(--red);border-radius:10px;font-size:13px;font-weight:900;">🗑 Reset</button>
+        </div>
+      </div>
+    </div>
+    <div class="main-col">
+      <div class="stats">
+        <div class="stat"><div class="stat-num" id="statQ">0</div><div class="stat-lbl">ຄິວ</div></div>
+        <div class="stat"><div class="stat-num" id="statD">0</div><div class="stat-lbl">ສຳເລັດ</div></div>
+        <div class="stat"><div class="stat-num" id="statC">0</div><div class="stat-lbl">ຍົກເລີກ</div></div>
+      </div>
+      <div class="orders-hdr">
+        <div class="orders-title">ລາຍການ · ORDERS</div>
+        <button class="done-btn" id="doneToggleBtn" onclick="toggleShowDone()">ສະແດງສຳເລັດ</button>
+      </div>
+      <div id="orderList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: SALES ══ -->
+<div class="page" id="pg-sales">
+  <div class="hdr"><div class="hdr-logo">ຍອດຂາຍ · SALES</div></div>
+  <div style="padding:12px;max-width:600px;margin:0 auto;">
+    <div class="sale-total-card">
+      <div class="sale-total-lbl">ຍອດລວມວັນນີ້</div>
+      <div class="sale-total-amt" id="saleTotalAmt">0 ກີບ</div>
+    </div>
+    <div class="sale-cards">
+      <div class="sale-card"><div class="sale-card-num" id="saleWalkinAmt">0</div><div class="sale-card-lbl">🏪 Walk-in (ກີບ)</div></div>
+      <div class="sale-card"><div class="sale-card-num" id="saleOnlineAmt">0</div><div class="sale-card-lbl">🌐 Online (ກີບ)</div></div>
+      <div class="sale-card"><div class="sale-card-num" id="saleWalkinCnt">0</div><div class="sale-card-lbl">🏪 ຈຳນວນ Walk-in</div></div>
+      <div class="sale-card"><div class="sale-card-num" id="saleOnlineCnt">0</div><div class="sale-card-lbl">🌐 ຈຳນວນ Online</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:900;color:var(--gr);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">ເມນູຂາຍດີ</div>
+      <div id="menuBars"></div>
+    </div>
+    <button onclick="exportSalesCSV()" style="width:100%;margin-top:10px;padding:13px;background:var(--br);color:var(--cr);border:none;border-radius:10px;font-size:14px;font-weight:900;">📊 Export CSV</button>
+  </div>
+</div>
+
+<!-- ══ PAGE: RECEIPT ══ -->
+<div class="page" id="pg-receipt">
+  <div class="hdr"><div class="hdr-logo">ໃບເສດ · RECEIPT</div></div>
+  <div style="padding:12px;max-width:400px;margin:0 auto;">
+    <div class="receipt-preview" id="receiptPreview"></div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bnav">
+  <button class="nbtn active" id="nb-orders" onclick="showPage('orders')"><div class="nbtn-icon">📋</div><div class="nbtn-lbl">ອໍເດີ</div></button>
+  <button class="nbtn" id="nb-sales" onclick="showPage('sales')"><div class="nbtn-icon">📊</div><div class="nbtn-lbl">ຍອດຂາຍ</div></button>
+  <button class="nbtn" id="nb-receipt" onclick="showPage('receipt')"><div class="nbtn-icon">🧾</div><div class="nbtn-lbl">ໃບເສດ</div></button>
+</div>
+
+<!-- Modals -->
+<div class="modal-bg" id="distributeModal">
+  <div class="modal">
+    <div class="modal-title">⚖️ ແຈກຈ່າຍສຕ໋ອກ</div>
+    <div class="modal-sub">ກຳນົດຈຳນວນໃຫ້ໜ້າຮ້ານ ແລະ ອອນໄລນ໌</div>
+    <div id="distributeList" style="max-height:50vh;overflow-y:auto;margin-bottom:12px;"></div>
+    <button class="mbtn primary" onclick="applyDistribute()">✅ ຢືນຢັນ</button>
+    <button class="mbtn outline" onclick="closeModal('distributeModal')">ຍົກເລີກ</button>
+  </div>
+</div>
+<div class="modal-bg" id="resetModal">
+  <div class="modal">
+    <div class="modal-title">⚠️ Reset ຂໍ້ມູນ</div>
+    <div class="modal-sub">ເລືອກວ່າຈະລ້າງຫຍັງ</div>
+    <button class="mbtn outline" onclick="resetOrders()">🗂 ລ້າງລາຍການສັ່ງ</button>
+    <button class="mbtn danger" onclick="resetAll()">⚠️ ລ້າງທັງໝົດ</button>
+    <button class="mbtn outline" onclick="closeModal('resetModal')">ຍົກເລີກ</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════
+// DATA HELPERS
+// ══════════════════════════════
+const EMOJIS=['🥟','🍫','🍵','🧁','🍞','🥐','🍮'];
+const BAG_LABELS=['','🛍 ຖົງດຽວ','📦 ແຍກຕາມປະເພດ','1️⃣ ແຍກທີລະກ້ອນ'];
+
+function getMenus(){const s=localStorage.getItem('bcb_menus');return s?JSON.parse(s):[{lo:'ຊາລາເປົາໝູສັບ'},{lo:'ໝັນໂຖ ຊ໋ອກໂກແລດ'},{lo:'ໝັນໂຖ ມັດຊະ'},{lo:'ເມນູ 4'},{lo:'ເມນູ 5'},{lo:'ເມນູ 6'},{lo:'ເມນູ 7'}];}
+function getPrices(){const s=localStorage.getItem('bcb_prices'),m=getMenus();const p=s?JSON.parse(s):new Array(m.length).fill(0);while(p.length<m.length)p.push(0);return p;}
+function getOrders(){return JSON.parse(localStorage.getItem('bcb_orders')||'[]');}
+function saveOrders(o){localStorage.setItem('bcb_orders',JSON.stringify(o));}
+function getStockKey(t){return t==='walkin'?'bcb_stock_walkin':t==='online'?'bcb_stock_online':'bcb_stock_total';}
+function getStock(t){const s=localStorage.getItem(getStockKey(t)),m=getMenus();const st=s?JSON.parse(s):new Array(m.length).fill(0);while(st.length<m.length)st.push(0);return st;}
+function saveStockToLS(st,t){localStorage.setItem(getStockKey(t),JSON.stringify(st));}
+function getShopStatus(){return JSON.parse(localStorage.getItem('bcb_shop_status')||'{"walkin":false,"online":false}');}
+function saveShopStatus(s){localStorage.setItem('bcb_shop_status',JSON.stringify(s));}
+
+// ══ TOAST ══
+function toast(msg,type='',dur=2500){
+  const el=document.createElement('div');el.className='ti '+(type||'');el.textContent=msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(()=>el.style.opacity='0',dur-300);setTimeout(()=>el.remove(),dur);
+}
+
+// ══ MODAL ══
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+// ══ CARD TOGGLE ══
+function toggleCard(id){document.getElementById(id).classList.toggle('collapsed');}
+
+// ══ PAGE NAV ══
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pg-'+name).classList.add('active');
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nb-'+name)?.classList.add('active');
+  if(name==='sales')renderSales();
+  if(name==='receipt')renderReceipt();
+}
+
+// ══ SHOP TOGGLE ══
+function toggleShop(type){
+  const s=getShopStatus();
+  s[type]=!s[type];
+  saveShopStatus(s);
+  renderShopStatus();
+  toast(s[type]?'🟢 '+( type==='walkin'?'Walk-in':'Online')+': ເປີດ':'🔴 '+(type==='walkin'?'Walk-in':'Online')+': ປິດ', s[type]?'green':'red');
+}
+function renderShopStatus(){
+  const s=getShopStatus();
+  // header
+  const hw=document.getElementById('hShopBtn');
+  const ho=document.getElementById('hOnlineBtn');
+  if(hw){hw.textContent=s.walkin?'🟢 Walk-in':'🔴 Walk-in';hw.style.borderColor=s.walkin?'#86efac':'#fca5a5';hw.style.color=s.walkin?'#86efac':'#fca5a5';}
+  if(ho){ho.textContent=s.online?'🟢 Online':'🔴 Online';ho.style.borderColor=s.online?'#86efac':'#fca5a5';ho.style.color=s.online?'#86efac':'#fca5a5';}
+  // sidebar
+  const sw=document.getElementById('sideShopBtn');
+  const so=document.getElementById('sideOnlineBtn');
+  if(sw){sw.textContent=s.walkin?'🟢 Walk-in: ເປີດ':'🔴 Walk-in: ປິດ';sw.className='toggle-btn '+(s.walkin?'open':'closed');}
+  if(so){so.textContent=s.online?'🟢 Online: ເປີດ':'🔴 Online: ປິດ';so.className='toggle-btn '+(s.online?'open':'closed');}
+}
+
+// ══ SPEECH ══
+let voices=[];
+window.speechSynthesis.onvoiceschanged=()=>{voices=window.speechSynthesis.getVoices();};
+function announce(num){
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance('ໝາຍເລກ '+String(num).padStart(3,'0')+' ຮັບສິນຄ້າໄດ້ເລີຍຄ່ະ');
+  const v=voices.find(v=>v.lang==='th-TH')||voices.find(v=>v.lang.startsWith('th'))||voices[0];
+  if(v)u.voice=v;u.lang='th-TH';u.rate=0.85;u.volume=1.0;
+  window.speechSynthesis.speak(u);
+}
+
+// ══ ORDERS ══
+let showDone=false;
+function toggleShowDone(){
+  showDone=!showDone;
+  document.getElementById('doneToggleBtn').textContent=showDone?'ເຊື່ອງທີ່ສຳເລັດ':'ສະແດງສຳເລັດ';
+  render();
+}
+
+function buildImgStrip(itemsStr){
+  const menus=getMenus();
+  const prices=getPrices();
+  let html='';
+  (itemsStr||'').split('\n').forEach(line=>{
+    const m=line.match(/^(.+)\s×(\d+)/);
+    if(!m)return;
+    const name=m[1].trim(),q=parseInt(m[2])||1;
+    const idx=menus.findIndex(mn=>mn.lo===name);
+    const img=idx>=0?localStorage.getItem('bcb_img_'+idx):'';
+    if(img)html+=`<div class="iitem"><img src="${img}"><div class="iqty">x${q}</div></div>`;
+    else html+=`<div class="iitem"><div class="iemoji">${EMOJIS[idx]||'🍱'}</div><div class="iqty">x${q}</div></div>`;
+  });
+  return html;
+}
+
+function render(){
+  const orders=getOrders();
+  const active=orders.filter(o=>!o.done&&!o.cancelled);
+  const done=orders.filter(o=>o.done);
+  const cancelled=orders.filter(o=>o.cancelled);
+  document.getElementById('statQ').textContent=active.length;
+  document.getElementById('statD').textContent=done.length;
+  document.getElementById('statC').textContent=cancelled.length;
+
+  let list=orders.filter(o=>showDone||(!o.done&&!o.cancelled));
+  if(!list.length&&orders.length){showDone=true;list=orders;document.getElementById('doneToggleBtn').textContent='ເຊື່ອງທີ່ສຳເລັດ';}
+
+  document.getElementById('orderList').innerHTML=list.length?list.map((o,i)=>renderOrder(o,i)).join(''):'<div class="empty">📭 ຍັງບໍ່ມີລາຍການ</div>';
+}
+
+function renderOrder(o,i){
+  const isOnline=o.type==='online';
+  let actions='';
+  if(o.cancelled){
+    actions=`<button class="abtn abtn-undo" onclick="undoCancel(${i})">↩ ຄືນ</button>`;
+  } else if(o.done){
+    actions=`<button class="abtn abtn-undo" onclick="undoDone(${i})">↩ ຍົກເລີກ Done</button>`;
+  } else if(isOnline&&o.status==='pending'){
+    actions=`<button class="abtn abtn-confirm" style="flex:3;" onclick="confirmSlip(${i})">✅ ຢືນຢັນສລິບ</button><button class="abtn abtn-reject" style="flex:2;" onclick="rejectSlip(${i})">❌ ປະຕິເສດ</button>`;
+  } else {
+    actions=`<button class="abtn abtn-done" style="flex:3;" onclick="doneDone(${i})">⚡ Done</button><button class="abtn abtn-call" onclick="callNum(${i})">📢</button><button class="abtn abtn-cancel" onclick="cancelOrder(${i})">✕</button>`;
+  }
+
+  const statusTag=isOnline?`<span class="otag ${o.status||'pending'}">${o.status==='confirmed'?'✅ ຢືນຢັນ':o.status==='rejected'?'❌ ປະຕິເສດ':'🟡 ລໍຖ້າ'}</span>`:'';
+
+  return `<div class="ocard${o.done?' done':''}${o.cancelled?' cancelled':''}">
+    <div class="istrip">${buildImgStrip(o.items)}</div>
+    <div class="obody">
+      <div class="ohead">
+        <div class="oqnum">ຄິວ ${String(o.num).padStart(3,'0')}</div>
+        <div class="oright">
+          <span class="otime">${o.time}</span>
+          <span class="otag ${isOnline?'online':'walkin'}">${isOnline?'🌐 ອອນໄລນ໌':'🏪 ໜ້າຮ້ານ'}</span>
+          ${statusTag}
+        </div>
+      </div>
+      ${isOnline&&o.custName?`<div class="ocustomer">👤 ${o.custName} · 📞 ${o.custPhone||''}<br>📅 ${o.pickupDate||''} ${o.pickupTime||''}</div>`:''}
+      <div class="oitems">${o.items}</div>
+      ${o.bag?`<div class="obag">${o.bag}</div>`:''}
+      ${o.note?`<div class="onote">📝 ${o.note}</div>`:''}
+      ${o.slipUrl?`<div class="oslip"><div class="oslip-lbl">📎 ສລິບໂອນເງິນ</div><img src="${o.slipUrl}" onclick="window.open('${o.slipUrl}','_blank')"></div>`:''}
+      ${o.total?`<div class="ototal">ລວມ: ${o.total.toLocaleString()} ກີບ</div>`:''}
+      <div class="oactions">${actions}</div>
+    </div>
+  </div>`;
+}
+
+function doneDone(i){
+  const orders=getOrders();
+  orders[i].done=true;
+  announce(orders[i].num);
+  // add to sales
+  addSale(orders[i]);
+  saveOrders(orders);render();
+  toast('✅ Done ຄິວ '+String(orders[i].num).padStart(3,'0'),'green');
+}
+function callNum(i){
+  const orders=getOrders();
+  announce(orders[i].num);
+  toast('📢 ປະກາດຄິວ '+String(orders[i].num).padStart(3,'0'));
+}
+function cancelOrder(i){
+  const orders=getOrders();orders[i].cancelled=true;saveOrders(orders);render();
+  toast('✕ ຍົກເລີກຄິວ '+String(orders[i].num).padStart(3,'0'),'red');
+}
+function undoCancel(i){const orders=getOrders();orders[i].cancelled=false;saveOrders(orders);render();}
+function undoDone(i){const orders=getOrders();orders[i].done=false;saveOrders(orders);render();}
+function confirmSlip(i){
+  const orders=getOrders();orders[i].status='confirmed';saveOrders(orders);render();
+  toast('✅ ຢືນຢັນສລິບ ຄິວ '+String(orders[i].num).padStart(3,'0'),'green');
+}
+function rejectSlip(i){
+  const orders=getOrders();orders[i].status='rejected';orders[i].cancelled=true;saveOrders(orders);render();
+  toast('❌ ປະຕິເສດ ຄິວ '+String(orders[i].num).padStart(3,'0'),'red');
+}
+
+// ══ SALES ══
+function addSale(order){
+  const today=new Date().toISOString().split('T')[0];
+  const sales=JSON.parse(localStorage.getItem('bcb_sales')||'{}');
+  if(!sales[today])sales[today]={walkin:[],online:[]};
+  const type=order.type==='online'?'online':'walkin';
+  sales[today][type].push({items:order.items,total:order.total||0,time:order.time});
+  localStorage.setItem('bcb_sales',JSON.stringify(sales));
+}
+function renderSales(){
+  const today=new Date().toISOString().split('T')[0];
+  const sales=JSON.parse(localStorage.getItem('bcb_sales')||'{}');
+  const day=sales[today]||{walkin:[],online:[]};
+  const walkinTotal=day.walkin.reduce((a,o)=>a+(o.total||0),0);
+  const onlineTotal=day.online.reduce((a,o)=>a+(o.total||0),0);
+  document.getElementById('saleTotalAmt').textContent=(walkinTotal+onlineTotal).toLocaleString()+' ກີບ';
+  document.getElementById('saleWalkinAmt').textContent=walkinTotal.toLocaleString();
+  document.getElementById('saleOnlineAmt').textContent=onlineTotal.toLocaleString();
+  document.getElementById('saleWalkinCnt').textContent=day.walkin.length;
+  document.getElementById('saleOnlineCnt').textContent=day.online.length;
+  // menu bars
+  const counts={};
+  [...day.walkin,...day.online].forEach(o=>{
+    (o.items||'').split('\n').forEach(line=>{
+      const m=line.match(/^(.+)\s×(\d+)/);
+      if(m)counts[m[1].trim()]=(counts[m[1].trim()]||0)+parseInt(m[2]);
+    });
+  });
+  const max=Math.max(1,...Object.values(counts));
+  document.getElementById('menuBars').innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([name,cnt])=>`
+    <div class="menu-bar">
+      <div class="menu-bar-name">${name}</div>
+      <div class="menu-bar-track"><div class="menu-bar-fill" style="width:${cnt/max*100}%"></div></div>
+      <div class="menu-bar-info"><span></span><span>${cnt} ກ້ອນ</span></div>
+    </div>`).join('')||'<div style="color:var(--gr);font-size:13px;font-weight:700;text-align:center;padding:10px;">ຍັງບໍ່ມີຂໍ້ມູນ</div>';
+}
+function exportSalesCSV(){
+  const sales=JSON.parse(localStorage.getItem('bcb_sales')||'{}');
+  let csv='ວັນທີ,ປະເພດ,ລາຍການ,ຍອດ\n';
+  Object.entries(sales).forEach(([date,day])=>{
+    [...(day.walkin||[]).map(o=>({...o,type:'walkin'})),...(day.online||[]).map(o=>({...o,type:'online'}))].forEach(o=>{
+      csv+=`${date},${o.type},"${(o.items||'').replace(/\n/g,'; ')}",${o.total||0}\n`;
+    });
+  });
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='sales.csv';a.click();
+}
+
+// ══ RECEIPT ══
+function renderReceipt(){
+  const orders=getOrders().filter(o=>o.done).slice(0,5);
+  document.getElementById('receiptPreview').innerHTML=orders.length?orders.map(o=>`
+    <div style="border-bottom:1.5px dashed var(--cr3);padding:12px 0;margin-bottom:8px;">
+      <div style="font-size:13px;font-weight:900;color:var(--br);">ຄິວ ${String(o.num).padStart(3,'0')} · ${o.time}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--br2);margin-top:4px;white-space:pre-line;">${o.items}</div>
+      ${o.total?`<div style="font-size:14px;font-weight:900;color:var(--br);margin-top:4px;">ລວມ: ${o.total.toLocaleString()} ກີບ</div>`:''}
+    </div>`).join(''):'<div style="text-align:center;color:var(--gr);font-size:14px;font-weight:700;padding:20px;">ຍັງບໍ່ມີລາຍການ Done</div>';
+}
+
+// ══ MENU SETTINGS ══
+function buildMenuSettings(){
+  const menus=getMenus();const prices=getPrices();
+  document.getElementById('menuSetList').innerHTML=menus.map((m,i)=>{
+    const img=localStorage.getItem('bcb_img_'+i);
+    return `<div class="mset-row">
+      <span class="mset-num">${i+1}</span>
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;">
+        <input class="mset-name" id="mn${i}" value="${m.lo}" placeholder="ຊື່ເມນູ">
+        <input class="mset-price" id="mp${i}" type="text" inputmode="numeric" value="${prices[i]||''}" placeholder="0">
+      </div>
+      <div class="mset-img">
+        <label><input type="file" accept="image/*" onchange="uploadMenuImg(event,${i})">
+          ${img?`<img src="${img}">`:`<span>${EMOJIS[i]||'🍱'}</span>`}
+        </label>
+        ${img?`<button onclick="removeMenuImg(${i})" style="width:100%;font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;margin-top:2px;">✕ ລຶບ</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function saveMenuSettings(){
+  const menus=getMenus();const prices=getPrices();
+  menus.forEach((m,i)=>{
+    const n=document.getElementById('mn'+i);const p=document.getElementById('mp'+i);
+    if(n)m.lo=n.value||m.lo;if(p)prices[i]=parseInt(p.value)||0;
+  });
+  localStorage.setItem('bcb_menus',JSON.stringify(menus));
+  localStorage.setItem('bcb_prices',JSON.stringify(prices));
+  toast('💾 ບັນທຶກເມນູ ✅','green');
+  buildMenuSettings();
+}
+function uploadMenuImg(e,i){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{localStorage.setItem('bcb_img_'+i,ev.target.result);buildMenuSettings();toast('📸 ອັບໂຫລດ ✅','green');};
+  r.readAsDataURL(f);
+}
+function removeMenuImg(i){localStorage.removeItem('bcb_img_'+i);buildMenuSettings();toast('ລຶບຮູບ','orange');}
+
+// ══ QR ══
+function uploadQR(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{localStorage.setItem('bcb_qr',ev.target.result);renderQRAdmin();toast('📱 ອັບໂຫລດ QR ✅','green');};
+  r.readAsDataURL(f);
+}
+function removeQR(){localStorage.removeItem('bcb_qr');renderQRAdmin();toast('ລຶບ QR','orange');}
+function renderQRAdmin(){
+  const qr=localStorage.getItem('bcb_qr');
+  document.getElementById('qrAdminImg').src=qr||'';
+  document.getElementById('qrAdminImg').style.display=qr?'block':'none';
+  document.getElementById('qrAdminEmpty').style.display=qr?'none':'block';
+  document.getElementById('qrRemoveBtn').style.display=qr?'block':'none';
+}
+
+// ══ STOCK ══
+let curStockTab='total';
+function switchStock(t){
+  curStockTab=t;
+  ['total','walkin','online'].forEach(tab=>{
+    document.getElementById('stab-'+tab).className='stab'+(tab===t?' active':'');
+  });
+  document.getElementById('distBtn').style.display=t==='total'?'block':'none';
+  renderStock();
+}
+function renderStock(){
+  const menus=getMenus();const st=getStock(curStockTab);
+  const lbl=curStockTab==='total'?'ສຕ໋ອກລວມ':curStockTab==='walkin'?'ສຕ໋ອກໜ້າຮ້ານ':'ສຕ໋ອກອອນໄລນ໌';
+  document.getElementById('stockList').innerHTML=`<div style="font-size:11px;font-weight:900;color:var(--gr);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;">${lbl}</div>`+
+    menus.map((m,i)=>{
+      const q=st[i]||0;const cls=q===0?' out':q<=5?' low':'';
+      return `<div class="stock-row">
+        <div class="stock-name">${m.lo}</div>
+        <div class="sctrl">
+          <button class="sbtn" onclick="chgStock(${i},-1)">−</button>
+          <input class="sinput${cls}" type="text" inputmode="numeric" id="si${i}" value="${q}"
+            onclick="this.select();event.preventDefault();" onblur="commitStock(${i},this.value)"
+            onkeydown="if(event.key==='Enter'){commitStock(${i},this.value);this.blur();}">
+          <button class="sbtn" onclick="chgStock(${i},1)">+</button>
+        </div>
+      </div>`;
+    }).join('');
+}
+function chgStock(i,d){
+  const st=getStock(curStockTab);st[i]=Math.max(0,(st[i]||0)+d);saveStockToLS(st,curStockTab);
+  const inp=document.getElementById('si'+i);
+  if(inp){inp.value=st[i];inp.className='sinput'+(st[i]===0?' out':st[i]<=5?' low':'');}
+  if(document.activeElement)document.activeElement.blur();
+}
+function commitStock(i,v){
+  const st=getStock(curStockTab);st[i]=Math.max(0,parseInt(v)||0);saveStockToLS(st,curStockTab);
+  const inp=document.getElementById('si'+i);
+  if(inp)inp.className='sinput'+(st[i]===0?' out':st[i]<=5?' low':'');
+}
+function saveStock(){
+  const menus=getMenus();const st=getStock(curStockTab);
+  menus.forEach((_,i)=>{const inp=document.getElementById('si'+i);if(inp)st[i]=parseInt(inp.value)||0;});
+  saveStockToLS(st,curStockTab);toast('💾 ບັນທຶກສຕ໋ອກ ✅','green');
+}
+function openDistribute(){
+  const menus=getMenus();const stTotal=getStock('total');const stW=getStock('walkin');const stO=getStock('online');
+  document.getElementById('distributeList').innerHTML=menus.map((m,i)=>`
+    <div style="padding:10px 0;border-bottom:1px solid var(--cr2);">
+      <div style="font-size:14px;font-weight:900;color:var(--br);margin-bottom:6px;">${m.lo} <span style="font-size:12px;color:var(--gr);">(ລວມ: ${stTotal[i]||0})</span></div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;"><div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px;">🏪 ໜ້າຮ້ານ</div>
+          <input type="text" inputmode="numeric" id="dw${i}" value="${stW[i]||0}" style="width:100%;border:1.5px solid var(--cr3);border-radius:8px;padding:7px;text-align:center;font-size:15px;font-weight:900;color:var(--br);background:var(--cr);">
+        </div>
+        <div style="flex:1;"><div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px;">🌐 ອອນໄລນ໌</div>
+          <input type="text" inputmode="numeric" id="do${i}" value="${stO[i]||0}" style="width:100%;border:1.5px solid var(--cr3);border-radius:8px;padding:7px;text-align:center;font-size:15px;font-weight:900;color:var(--br);background:var(--cr);">
+        </div>
+      </div>
+    </div>`).join('');
+  openModal('distributeModal');
+}
+function applyDistribute(){
+  const menus=getMenus();const stW=getStock('walkin');const stO=getStock('online');
+  menus.forEach((_,i)=>{
+    const dw=document.getElementById('dw'+i);const doo=document.getElementById('do'+i);
+    if(dw)stW[i]=parseInt(dw.value)||0;if(doo)stO[i]=parseInt(doo.value)||0;
+  });
+  saveStockToLS(stW,'walkin');saveStockToLS(stO,'online');
+  closeModal('distributeModal');toast('✅ ແຈກຈ່າຍສຳເລັດ','green');renderStock();
+}
+
+// ══ DATA ══
+function exportData(){
+  const data={menus:getMenus(),prices:getPrices(),orders:getOrders(),sales:JSON.parse(localStorage.getItem('bcb_sales')||'{}')};
+  const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(data,null,2));a.download='bcb_data.json';a.click();
+}
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{const d=JSON.parse(ev.target.result);
+      if(d.menus)localStorage.setItem('bcb_menus',JSON.stringify(d.menus));
+      if(d.prices)localStorage.setItem('bcb_prices',JSON.stringify(d.prices));
+      if(d.orders)localStorage.setItem('bcb_orders',JSON.stringify(d.orders));
+      if(d.sales)localStorage.setItem('bcb_sales',JSON.stringify(d.sales));
+      toast('📥 Import ✅','green');init();
+    }catch(err){toast('ໄຟລ໌ຜິດພາດ','red');}
+  };r.readAsText(f);
+}
+function openReset(){openModal('resetModal');}
+function resetOrders(){saveOrders([]);localStorage.removeItem('bcb_queue');closeModal('resetModal');render();toast('🗂 ລ້າງລາຍການ ✅','orange');}
+function resetAll(){
+  ['bcb_orders','bcb_queue','bcb_sales','bcb_stock_total','bcb_stock_walkin','bcb_stock_online'].forEach(k=>localStorage.removeItem(k));
+  closeModal('resetModal');init();toast('⚠️ Reset ທັງໝົດ ✅','red');
+}
+
+// ══ NOTIFICATIONS ══
+function checkNotif(){
+  const orders=getOrders();
+  const pending=orders.filter(o=>!o.done&&!o.cancelled&&o.type==='online'&&o.status==='pending');
+  const nb=document.getElementById('nb-orders');
+  if(nb)nb.querySelector('.nbtn-icon').textContent=pending.length>0?'📋🔴':'📋';
+}
+
+// ══ INIT ══
+function init(){
+  renderShopStatus();
+  buildMenuSettings();
+  renderQRAdmin();
+  renderStock();
+  render();
+  checkNotif();
+}
+init();
+window.addEventListener('storage',()=>{render();checkNotif();renderStock();});
+setInterval(()=>{render();checkNotif();},3000);
+</script>
+</body>
+</html>
