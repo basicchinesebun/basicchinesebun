@@ -280,7 +280,11 @@ function loadData() {
 
 function getStock() {
   const s = localStorage.getItem('bcb_stock');
-  return s ? JSON.parse(s) : new Array(menus.length).fill(99);
+  if (!s) return new Array(menus.length).fill(99);
+  const arr = JSON.parse(s);
+  // ถ้าทุกตัวเป็น 0 แปลว่ายังไม่ได้ตั้งสต็อก ให้แสดงทั้งหมด
+  if (arr.every(v => v === 0)) return new Array(menus.length).fill(99);
+  return arr;
 }
 
 function buildGrid() {
